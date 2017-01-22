@@ -23,9 +23,6 @@
     <ClCompile Include="..\include\core\vec3f.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\vertex.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="src\vkdevice.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
@@ -62,6 +59,9 @@
     <ClCompile Include="src\mesh.cpp">
       <Filter>Vulkan\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\vertex.cpp">
+      <Filter>Vulkan\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h">
@@ -87,9 +87,6 @@
     </ClInclude>
     <ClInclude Include="..\include\core\vec3f.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\vertex.h">
-      <Filter>Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\vkdevice.h">
       <Filter>Vulkan</Filter>
@@ -131,6 +128,9 @@
       <Filter>Vulkan\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\shader.h">
+      <Filter>Vulkan\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vertex.h">
       <Filter>Vulkan\Scene</Filter>
     </ClInclude>
   </ItemGroup>

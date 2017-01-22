@@ -14,9 +14,9 @@ layout(location = 2) in vec2 inCoords;
 layout(location = 0) out vec3 fragColor;
 layout(location = 1) out vec2 fragCoords;
 
-out gl_PerVertex {
-    vec4 gl_Position;
-};
+//out gl_PerVertex {
+//    vec4 gl_Position;
+//};
 
 void main() {
     vec3 pos = vec3(inPosition.x,-inPosition.y,inPosition.z);
