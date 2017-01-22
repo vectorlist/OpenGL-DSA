@@ -21,7 +21,7 @@ public:
 	/*OVERRIDE*/
 	virtual void buildProcedural();
 	virtual void render() = 0;
-
+	virtual void updateUniformBuffers() = 0;
 
 	bool isBuilt = false;
 

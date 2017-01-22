@@ -4,7 +4,7 @@
 #include <vector>
 #include <vktools.h>
 #include <vkinitializer.h>
-#include <vkbuffer.h>
+
 struct QueueFamilyIndice
 {
 	uint32_t graphics;

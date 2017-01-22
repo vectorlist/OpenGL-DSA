@@ -32,32 +32,32 @@ void BasicRenderer::buildProcedural()
 	VkRenderer::buildProcedural();
 	m_shader = new Shader(m_device);
 	buildScene();					//to create vertex and unifrom buffer
-	//buildPipeline();
+
 	buildDescriptorSetLayout();
-	buildPipeline0001();				//test
-
-	//buildScene();					//to create vertex and unifrom buffer
-
-	buildCommandBuffers();
-	/*buildDescriptorSetLayout();*/
-
+	buildPipeline0001();			
 	buildDescriptorPool();
-	//buildDescriptorSet();				//after set layout then update
+	buildDescriptorSet();
+	buildCommandBuffers();
+
+	isBuilt = true;
 }
 
 void BasicRenderer::buildScene()
 {
-	m_scene = new Scene(m_vulkanDevice);
+	m_scene = new Scene(this);
 	
 	mesh_ptr mesh = mesh_ptr(new MeshObject);
 
-	meshTool::LoadModel("./model/sphinx.obj", mesh.get());
+	meshTool::LoadModel("./model/sphinxfixed.obj", mesh.get());
 
 	m_scene->addObject(mesh);
 
 	m_scene->buildVertexBuffer();
 	m_scene->buildIndiceBuffer();
 	m_scene->initUniformBuffer();
+	m_scene->buildInputState();
+
+	m_scene->updateUnifomrBuffers();
 }
 
 void BasicRenderer::buildDescriptorPool()
@@ -95,9 +95,9 @@ void BasicRenderer::buildDescriptorSet()
 
 	//create buffers
 	VkDescriptorBufferInfo bufferinfo{};
-	bufferinfo.buffer = m_scene->unifromBuffer();
+	bufferinfo.buffer = m_scene->ubo.buffer;
 	bufferinfo.offset = 0;
-	bufferinfo.range = sizeof(UBO);
+	bufferinfo.range = sizeof(UBODataType);
 
 	VkDescriptorImageInfo imageInfo{};
 
@@ -145,6 +145,11 @@ void BasicRenderer::buildDescriptorSet()
 	//we need biding this descriptor before rendering
 }
 
+void BasicRenderer::updateUniformBuffers()
+{
+	m_scene->updateUnifomrBuffers();
+}
+
 void BasicRenderer::render()
 {
 	//opengl style
@@ -189,8 +194,13 @@ void BasicRenderer::buildCommandBuffers()
 		VkRect2D scissor = vkInitializer::rect2D(width, height, 0, 0);
 		vkCmdSetScissor(m_commandBuffers[i], 0, 1, &scissor);
 
-		/*vkCmdBindDescriptorSets(m_commandBuffers[i],VK_PIPELINE_BIND_POINT_GRAPHICS,
-			)*/
+		vkCmdBindDescriptorSets(m_commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
+			m_pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
+
+		for (auto& mesh : m_scene->meshs)
+		{
+			mesh->render(m_commandBuffers[i]);
+		}
 
 		vkCmdEndRenderPass(m_commandBuffers[i]);
 
@@ -432,6 +442,16 @@ void BasicRenderer::buildPipeline0001()
 
 	LOG_ERROR("failed to create pipeline layout") <<
 	vkCreatePipelineLayout(m_device, &pipelineLayoutInfo, nullptr, &m_pipelineLayout);
+
+	std::vector<VkDynamicState> dynamicStateEnables{
+		VK_DYNAMIC_STATE_VIEWPORT,
+		VK_DYNAMIC_STATE_SCISSOR
+	};
+
+	VkPipelineDynamicStateCreateInfo dynamicState{};
+	dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+	dynamicState.pDynamicStates = dynamicStateEnables.data();
+	dynamicState.dynamicStateCount = (uint32_t)dynamicStateEnables.size();
 	
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -444,14 +464,18 @@ void BasicRenderer::buildPipeline0001()
 	pipelineInfo.pMultisampleState = &multiSmapling;
 	pipelineInfo.pDepthStencilState = &depthStencil;
 	pipelineInfo.pColorBlendState = &colorBlendState;
+	pipelineInfo.pDynamicState = &dynamicState;
 	pipelineInfo.layout = m_pipelineLayout;
 	pipelineInfo.renderPass = m_renderPass;
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
-
+	
 	//create graphic pipeline
-	LOG_ERROR("failed to create graphic pipeline") <<
+	/*LOG_ERROR("failed to create graphic pipeline") <<
 		vkCreateGraphicsPipelines(
-			m_device, m_pipelineCache, 1, &pipelineInfo, nullptr, &m_pipeline);
+			m_device, m_pipelineCache, 1, &pipelineInfo, nullptr, &m_pipeline);*/
+	LOG_ERROR("failed to create mesh graphic pipeline") <<
+		vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo, nullptr, 
+			&m_scene->meshs[0]->pipeline);
 
 }

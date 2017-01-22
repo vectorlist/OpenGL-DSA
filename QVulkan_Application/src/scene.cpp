@@ -1,30 +1,29 @@
 #include "scene.h"
+#include <vklog.h>
+#include <vkrenderer.h>
 #include <vkdevice.h>
 
-
-Scene::Scene(VulkanDevice * device) 
-	: vulkanDevice(device)
+Scene::Scene(VkRenderer *renderer)
+	: m_renderer(renderer)
 {
-	//instace flash device for buffer objects
-	m_device = device->m_device;
-	if (m_device == nullptr) qFatal("fatal : could not get device");
+	vulkanDevice = m_renderer->m_vulkanDevice;
+	m_device = m_renderer->m_device;
 }
 
 
 Scene::~Scene()
 {
-	//ok far now
 	releaseBuffers();
 }
 
 void Scene::buildVertexBuffer()
 {
 	LOG_SECTION("create vertex buffers");
-	if (!objects.size()) return;
+	if (!meshs.size()) return;
 	
-	for (auto &object : objects)
+	for (auto &mesh : meshs)
 	{
-		VkDeviceSize bufferSize = sizeof(object->vertices[0]) * object->vertices.size();
+		VkDeviceSize bufferSize = sizeof(mesh->vertices[0]) * mesh->vertices.size();
 		VkBuffer stagingBuffer;
 		VkDeviceMemory stagingBufferMemory;
 
@@ -38,7 +37,7 @@ void Scene::buildVertexBuffer()
 
 		void* data;
 		vkMapMemory(m_device, stagingBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, object->vertices.data(), (size_t)bufferSize);
+		memcpy(data, mesh->vertices.data(), (size_t)bufferSize);
 		vkUnmapMemory(m_device, stagingBufferMemory);
 
 		//create buffer for real vertex buffer object and memory
@@ -46,15 +45,15 @@ void Scene::buildVertexBuffer()
 			VK_BUFFER_USAGE_TRANSFER_DST_BIT |
 			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT ,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-			object->vbo,
-			object->vboMemory,
+			mesh->vbo.buffer,
+			mesh->vbo.memory,
 			bufferSize
 		);
 
-		vulkanDevice->copyBuffer(stagingBuffer, object->vbo, bufferSize);
+		vulkanDevice->copyBuffer(stagingBuffer, mesh->vbo.buffer, bufferSize);
 
 
-		LOG << "vertex buffer object : " <<object->vbo << ENDL;
+		LOG << "vertex buffer object : " << mesh->vbo.buffer << ENDL;
 		LOG << "buffer size : " << bufferSize << ENDL;
 		//we dont need staging buffer anymore
 		vulkanDevice->destroyBuffer(stagingBuffer, stagingBufferMemory);
@@ -65,9 +64,9 @@ void Scene::buildVertexBuffer()
 void Scene::buildIndiceBuffer()
 {
 	LOG_SECTION("create index buffers");
-	for (auto& object : objects)
+	for (auto& mesh : meshs)
 	{
-		VkDeviceSize bufferSize = object->indiceBufferSize();
+		VkDeviceSize bufferSize = mesh->indiceBufferSize();
 
 		VkBuffer stagingBuffer;
 		VkDeviceMemory stagingBufferMemory;
@@ -81,20 +80,20 @@ void Scene::buildIndiceBuffer()
 
 		void* data;
 		vkMapMemory(m_device, stagingBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, object->indices.data(), (size_t)bufferSize);
+		memcpy(data, mesh->indices.data(), (size_t)bufferSize);
 		vkUnmapMemory(m_device, stagingBufferMemory);
 
 		vulkanDevice->createBuffer(
 			VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-			object->ibo,
-			object->iboMemory,
+			mesh->ibo.buffer,
+			mesh->ibo.memory,
 			bufferSize);
 
-		vulkanDevice->copyBuffer(stagingBuffer, object->ibo, bufferSize);
+		vulkanDevice->copyBuffer(stagingBuffer, mesh->ibo.buffer, bufferSize);
 
 
-		LOG << "index buffer object : " << object->ibo << ENDL;
+		LOG << "index buffer object : " << mesh->ibo.buffer << ENDL;
 		LOG << "buffer size : " << bufferSize << ENDL;
 		vulkanDevice->destroyBuffer(stagingBuffer, stagingBufferMemory);
 	}
@@ -104,39 +103,66 @@ void Scene::initUniformBuffer()
 {
 	LOG_SECTION("initialize uniform buffer");
 	//keep staging buffer alive
-	VkDeviceSize bufferSize = sizeof(UBO);
+	VkDeviceSize bufferSize = sizeof(UBODataType);
 
 	//flash instance
 	vulkanDevice->createBuffer(
 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		uniObj.stagingBuffer,
-		uniObj.stagingBufferMemory,
+		ubo.stagingBuffer,
+		ubo.stagingMemory,
 		bufferSize);
 	//local allocate memory
 	vulkanDevice->createBuffer(
 		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		uniObj.buffer,
-		uniObj.bufferMemory,
+		ubo.buffer,
+		ubo.memory,
 		bufferSize);
 	LOG << "prepared uniform buffer size : " << bufferSize << ENDL;
 }
 
+void Scene::buildInputState()
+{
+	vertexInputBinding = Vertex::getBindingDescribtion();
+	vertexInputAttrib = Vertex::getAttributeDescribtions();
+
+	vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+	vertexInputState.pNext = NULL;
+	vertexInputState.vertexBindingDescriptionCount = 1;
+	vertexInputState.pVertexBindingDescriptions = &vertexInputBinding;
+	vertexInputState.vertexAttributeDescriptionCount = vertexInputAttrib.size();
+	vertexInputState.pVertexAttributeDescriptions = vertexInputAttrib.data();
+
+}
+
+void Scene::updateUnifomrBuffers()
+{
+	float aspect = m_renderer->width / (float)m_renderer->height;
+	ubo.data.proj = vml::perspective(45.f, aspect, 0.01f, 100.0f).transposed();
+	ubo.data.view = vml::lookAt(vec3f(3, 3, 3), vec3f(0, 0, 0), vec3f(0, 1, 0)).transposed();
+
+	ubo.data.proj[1][1] *= -1;
+
+	void* data;
+	vkMapMemory(m_device, ubo.stagingMemory, 0, sizeof(ubo.data), 0,&data);
+	memcpy(data, &ubo.data, sizeof(ubo.data));
+	vkUnmapMemory(m_device, ubo.stagingMemory);
+	vulkanDevice->copyBuffer(ubo.stagingBuffer, ubo.buffer, sizeof(ubo.data));
+}
+
 void Scene::releaseBuffers()
 {
-	//if ((!m_device) && !isBuilt) LOG_WARN("buffer is not correct");
-	for (auto &o : objects)
+	/*VBO IBO*/
+	for (auto &mesh : meshs)
 	{
-		vkDestroyBuffer(m_device, o->vbo, nullptr);
-		vkDestroyBuffer(m_device, o->ibo, nullptr);
-
-		vkFreeMemory(m_device, o->vboMemory, nullptr);
-		vkFreeMemory(m_device, o->iboMemory, nullptr);
+		//delete buffer
+		destroyBuffer(mesh->vbo);
+		destroyBuffer(mesh->ibo);
+		//delete pipeline
+		vkDestroyPipeline(m_device, mesh->pipeline, nullptr);
 	}
 	/*UBO*/
-
-	vulkanDevice->destroyBuffer(uniObj.stagingBuffer, uniObj.stagingBufferMemory);
-	vulkanDevice->destroyBuffer(uniObj.buffer, uniObj.bufferMemory);
-
+	destroyBuffer(ubo.stagingBuffer, ubo.stagingMemory);
+	destroyBuffer(ubo.buffer, ubo.memory);
 }

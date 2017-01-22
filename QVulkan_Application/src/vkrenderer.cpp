@@ -78,7 +78,7 @@ void VkRenderer::buildProcedural()
 	buildFrameBuffer();
 
 	//missing something
-	isBuilt = true;
+	//isBuilt = true;
 }
 
 void VkRenderer::buildSubmitInfo()

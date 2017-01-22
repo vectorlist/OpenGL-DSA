@@ -20,7 +20,7 @@ public:
 	VkPipelineLayout m_pipelineLayout;
 	VkDescriptorSet m_descriptorSet;
 	VkDescriptorSetLayout m_descriptorSetLayout;
-	VkPipeline m_pipeline;
+	//VkPipeline m_pipeline;
 	
 	
 	Shader* m_shader;
@@ -40,7 +40,7 @@ public:
 	void buildDescriptorSet();
 	VkDescriptorPool m_descriptorPool;
 
-
+	void updateUniformBuffers();
 private:
 	VkPrimitiveTopology defaultTopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 };
