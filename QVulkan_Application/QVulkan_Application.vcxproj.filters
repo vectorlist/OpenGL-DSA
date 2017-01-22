@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="..\include\core\color.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainWindow.cpp">
+      <Filter>Qt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderwindow.cpp">
+      <Filter>Qt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\core\matrix4x4.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\glshader.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\glwindow.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\core\vec3f.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vertex.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vkdevice.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vkinstance.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vklog.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\glad.c">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vkswapchain.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vktexture.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vktools.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\basicrenderer.cpp">
+      <Filter>Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vkrenderer.cpp">
+      <Filter>Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vkrenderer_sub.cpp">
+      <Filter>Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene.cpp">
+      <Filter>Vulkan\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mesh.cpp">
+      <Filter>Vulkan\Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\core\color.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainWindow.h">
+      <Filter>Qt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderwindow.h">
+      <Filter>Qt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core\matrix4x4.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glshader.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glwindow.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core\vec2f.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core\vec3f.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vertex.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vkbuffer.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vkdevice.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="vkinitializer.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vkinstance.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vklog.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="vksemaphore.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vkswapchain.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vktexture.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vktools.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core\vml.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\basicrenderer.h">
+      <Filter>Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vkrenderer.h">
+      <Filter>Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene.h">
+      <Filter>Vulkan\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh.h">
+      <Filter>Vulkan\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shader.h">
+      <Filter>Vulkan\Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="OpenGL">
+      <UniqueIdentifier>{2abffc42-a63b-4dd2-8f8f-8d5bc058bff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan">
+      <UniqueIdentifier>{cc28c4b7-6864-4645-90c4-1f3a4461a057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2dd21186-b503-43e7-8dc2-eef17f5cc7fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Qt">
+      <UniqueIdentifier>{aad57249-45fc-4fd2-87c0-bb90372c5ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan\Renderer">
+      <UniqueIdentifier>{784ef821-6a69-45a1-811f-1c5412828958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vulkan\Scene">
+      <UniqueIdentifier>{d003655f-6bd6-47bb-9cb1-991eacaa3ccc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
