@@ -25,7 +25,9 @@ public:
 		getAttributeDescribtions();
 
 	bool operator==(const Vertex &other) const {
-		return pos == other.pos && color == other.color && st == other.st;
+		return
+			pos == other.pos && normal == other.normal &&
+			color == other.color && st == other.st;
 	}
 };
 

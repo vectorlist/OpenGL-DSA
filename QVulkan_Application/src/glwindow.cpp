@@ -3,7 +3,7 @@
 #include <glshader.h>
 
 GLWindow::GLWindow(QWidget* parent) 
-	: QOpenGLWidget(parent)
+	: QOpenGLWidget(parent), m_shader(NULL)
 {
 	/*gladLoadGL();*/
 	

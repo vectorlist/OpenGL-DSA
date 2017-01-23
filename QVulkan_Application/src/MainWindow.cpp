@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent)
 	m_glwindow = new GLWindow();
 	
 
-	m_layout->addWidget(m_glwindow);
+	//m_layout->addWidget(m_glwindow);
 
 	m_renderWindow = new RenderWindow;
 	m_renderWindowContainer = QWidget::createWindowContainer(m_renderWindow);

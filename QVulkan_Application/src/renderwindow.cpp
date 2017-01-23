@@ -22,8 +22,12 @@ void RenderWindow::resizeEvent(QResizeEvent* e)
 {
 	QWindow::resizeEvent(e);
 	//for setSurface by Qwindow
-	if(!m_renderer->isBuilt)
+
+	if (!m_renderer->isBuilt)
 		m_renderer->buildProcedural();
+	else
+		m_renderer->resized();
+	/*m_renderer->resized();*/
 	m_renderer->updateUniformBuffers();
 	m_renderer->render();
 }

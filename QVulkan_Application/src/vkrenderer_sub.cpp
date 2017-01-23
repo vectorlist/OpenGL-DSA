@@ -80,8 +80,8 @@ void VkRenderer::buildDepthStencil()
 	memAllocInfo.memoryTypeIndex = m_vulkanDevice->getMemoryType(memReqs.memoryTypeBits,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-	LOG << "need depth stencil memory size : "<<memReqs.size << ENDL;
-	LOG << "need depth stencil type : " << memReqs.memoryTypeBits << ENDL;
+	LOG << "depth stencil memory size : "<<memReqs.size << ENDL;
+	LOG << "depth stencil type : " << memReqs.memoryTypeBits << ENDL;
 	
 	LOG_ERROR("failed to allocate depth memory") <<
 	vkAllocateMemory(m_device, &memAllocInfo, nullptr, &m_depthStencil.memory);

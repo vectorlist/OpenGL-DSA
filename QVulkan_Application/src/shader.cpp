@@ -13,9 +13,9 @@ Shader::~Shader()
 	}*/
 
 	vkDestroyShaderModule(m_device, vertModule, nullptr);
-	vertModule = VK_NULL_HANDLE;
+	//vertModule = VK_NULL_HANDLE;
 	vkDestroyShaderModule(m_device, fragModule, nullptr);
-	fragModule = VK_NULL_HANDLE;
+	//fragModule = VK_NULL_HANDLE;
 }
 
 

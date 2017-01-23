@@ -17,14 +17,6 @@ public:
 	QWindow* m_window;
 	HWND m_nativeWindow;
 
-	void initialize();
-	/*OVERRIDE*/
-	virtual void buildProcedural();
-	virtual void render() = 0;
-	virtual void updateUniformBuffers() = 0;
-
-	bool isBuilt = false;
-
 	/*COMMON FORMAT*/
 	VkFormat m_colorFormat = VK_FORMAT_B8G8R8A8_UNORM;		//vec3
 	VkFormat m_depthFormat;
@@ -52,7 +44,6 @@ public:
 	/*SUBMIT INFO*/
 	VkPipelineStageFlags m_submitPipelineStages = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	VkSubmitInfo m_submitInfo;
-	void buildSubmitInfo();
 
 	/*COMMAND POOL*/
 	VkCommandPool m_commandPool = VK_NULL_HANDLE;
@@ -79,7 +70,13 @@ public:
 	uint32_t m_currentBuffer = 0;				//active frame buffer index
 
 	VkClearColorValue defaultClearColor = { { 0.125f, 0.125f, 0.125f, 1.0f } };
-	
+	bool isBuilt = false;
+
+	/*MAIN FUNCTION*/
+	void initialize();
+	virtual void buildProcedural();
+	void buildSubmitInfo();
+
 	/*SUB FUNCTIONS*/
 	void buildCommandPool();
 	void allocateCommandBuffers();
@@ -89,12 +86,16 @@ public:
 	void buildFrameBuffer();
 
 	/*ADDITIONAL FUNCTIONS*/
-	void buildCommandBuffers() {};
+	virtual void buildCommandBuffers() {};
+
+	/*DERIVED OVERRIDE*/
+	virtual void render() = 0;
+	virtual void updateUniformBuffers() = 0;
 
 	//prepare render function
 	void begin();				//frame
 	void end();					//sumit
-
+	void resize();
 	
 };
 

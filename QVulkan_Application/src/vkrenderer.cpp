@@ -68,7 +68,6 @@ void VkRenderer::initialize()
 
 void VkRenderer::buildProcedural()
 {
-	//sub
 	buildCommandPool();
 	m_swapchain->buildSwapchain(&width, &height);
 	allocateCommandBuffers();
@@ -76,9 +75,6 @@ void VkRenderer::buildProcedural()
 	buildRenderPass();
 	buildPipelineCache();
 	buildFrameBuffer();
-
-	//missing something
-	//isBuilt = true;
 }
 
 void VkRenderer::buildSubmitInfo()
@@ -102,4 +98,29 @@ void VkRenderer::end()
 {
 	LOG_RESULT(m_swapchain->queuePresent(m_queue, m_currentBuffer,m_semaphores->renderComplete));
 	LOG_RESULT(vkQueueWaitIdle(m_queue));
+}
+
+void VkRenderer::resize()
+{
+	isBuilt = false;
+
+	m_swapchain->buildSwapchain(&width, &height);
+
+	vkDestroyImageView(m_device, m_depthStencil.view, nullptr);
+	vkDestroyImage(m_device, m_depthStencil.image, nullptr);
+	vkFreeMemory(m_device, m_depthStencil.memory, nullptr);
+	buildDepthStencil();
+
+	for (auto frameBuffer : m_frameBuffers)
+		vkDestroyFramebuffer(m_device, frameBuffer, nullptr);
+	buildFrameBuffer();
+
+	vkFreeCommandBuffers(m_device, m_commandPool, m_commandBuffers.size(), m_commandBuffers.data());
+	allocateCommandBuffers();
+	buildCommandBuffers();
+
+	vkQueueWaitIdle(m_queue);
+	vkDeviceWaitIdle(m_device);
+
+	isBuilt = true;
 }
