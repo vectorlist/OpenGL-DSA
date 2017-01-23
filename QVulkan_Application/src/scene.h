@@ -1,15 +1,20 @@
 #pragma once
 
+#define VML_USE_VULKAN
+#include <matrix4x4.h>
+
 #include <vertex.h>
 #include <vector>
 #include <memory>
-#include <matrix4x4.h>
+#include <shader.h>
+#include <ubo.h>
 
-struct Buffer
+
+typedef struct Buffer
 {
 	VkBuffer buffer;
 	VkDeviceMemory memory;
-};
+}Buffer;
 
 struct MeshObject
 {
@@ -38,27 +43,7 @@ struct MeshObject
 	}
 };
 
-
 typedef std::shared_ptr<MeshObject> mesh_ptr;
-
-typedef struct UBOData
-{
-	Matrix4x4 model;
-	Matrix4x4 view;
-	Matrix4x4 proj;
-}UBODataType;
-
-typedef struct UniformBufferObject_T
-{
-	UBOData data;
-
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingMemory;
-
-	VkBuffer buffer;
-	VkDeviceMemory memory;
-
-}UBO;
 
 class VkRenderer;
 class VulkanDevice;
@@ -73,10 +58,14 @@ public:
 	VkDevice m_device;
 	bool isBuilt = false;
 
+	/*MESH*/
 	std::vector<mesh_ptr> meshs;
 
+	/*SHADER*/
+	std::vector<shader_ptr> shaders;
+
 	VkPipelineVertexInputStateCreateInfo vertexInputState = {};
-	std::array<VkVertexInputAttributeDescription,3> vertexInputAttrib;
+	std::array<VkVertexInputAttributeDescription,4> vertexInputAttrib;
 	VkVertexInputBindingDescription vertexInputBinding;
 
 
@@ -86,7 +75,10 @@ public:
 
 	/*UNIFORM BUFFER*/
 	UBO ubo;
+	//UniformSet<testData> tUbo;
 	void initUniformBuffer();
+	//void tuUpdate();
+	
 
 	/*BUILD DESCRTIPTION AND STATE*/
 	void buildInputState();
@@ -95,7 +87,8 @@ public:
 
 	void releaseBuffers();
 
-	void addObject(mesh_ptr obj);
+	void addElement(mesh_ptr mesh);
+	void addElement(shader_ptr shader);
 
 	//built in
 	void destroyBuffer(VkBuffer buffer, VkDeviceMemory memory);
@@ -103,9 +96,14 @@ public:
 
 };
 
-inline void Scene::addObject(mesh_ptr obj)
+inline void Scene::addElement(mesh_ptr mesh)
 {
-	meshs.push_back(obj);
+	meshs.push_back(mesh);
+}
+
+inline void Scene::addElement(shader_ptr shader)
+{
+	shaders.push_back(shader);
 }
 
 inline void Scene::destroyBuffer(VkBuffer buffer, VkDeviceMemory memory)

@@ -31,7 +31,6 @@ public:
 
 	void buildDescriptorSetLayout();
 	void buildPipeline();
-	void buildPipeline0001();
 
 	void buildScene();
 

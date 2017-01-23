@@ -37,6 +37,14 @@ const float MATRIX_EPSILON = 1e-5f;
 #define VML_MATRIX_ORDER				VML_ROW_ORDER		//defualt row order
 #endif 
 
+//note : include once matrix4x4 in header file
+
+#ifdef VML_USE_VULKAN
+#define VML_VULKAN_CLIP					true
+#else
+#define VML_VULKAN_CLIP					false
+#endif //VML_USE_VULKA
+
 const inline float radians(float deg)
 {
 	return VML_PI / 180.f * deg;

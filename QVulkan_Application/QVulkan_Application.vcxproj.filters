@@ -62,6 +62,9 @@
     <ClCompile Include="src\vertex.cpp">
       <Filter>Vulkan\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\shader.cpp">
+      <Filter>Vulkan\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h">
@@ -133,6 +136,9 @@
     <ClInclude Include="src\vertex.h">
       <Filter>Vulkan\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\ubo.h">
+      <Filter>Vulkan\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="OpenGL">
@@ -152,6 +158,16 @@
     </Filter>
     <Filter Include="Vulkan\Scene">
       <UniqueIdentifier>{d003655f-6bd6-47bb-9cb1-991eacaa3ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+      <ParseFiles>true</ParseFiles>
     </Filter>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	////setConsole(10, 10, 780, 1000);
 	MainWindow mw;
 	//mw.resize(680, 420);
-	mw.setGeometry(810, 300, 900, 520);
+	mw.setGeometry(810, 300, 940, 620);
 	mw.show();
 
 	//system("pause");

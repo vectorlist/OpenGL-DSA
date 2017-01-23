@@ -306,6 +306,17 @@ Matrix4x4 Matrix4x4::inverted() const
 	return inv;
 }
 
+Matrix4x4 Matrix4x4::vulkandClip()
+{
+	Matrix4x4 clip = {
+		1.0f,  0.0f,  0.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,  0.0f,
+		0.0f,  0.0f,  0.5f,  0.5f,
+		0.0f,  0.0f,  0.0f,  1.0f
+	};
+	return clip;
+}
+
 vec3f operator*(const Matrix4x4 &m, const vec3f &v)
 {
 	float x, y, z;

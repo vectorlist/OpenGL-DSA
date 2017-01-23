@@ -11,16 +11,17 @@ class Vertex
 {
 public:
 	Vertex() : pos(), color(), st() {}
-	Vertex(const vec3f &pos, const vec3f &color, const vec2f &st = vec2f())
-		: pos(pos), color(color), st(st) {}
+	Vertex(const vec3f &pos, const vec3f &normal,const vec3f &color, const vec2f &st = vec2f())
+		: pos(pos), normal(normal),color(color), st(st) {}
 
 	vec3f pos;
+	vec3f normal;
 	vec3f color;
 	vec2f st;
 
 	static VkVertexInputBindingDescription getBindingDescribtion();
 
-	static std::array<VkVertexInputAttributeDescription, 3>
+	static std::array<VkVertexInputAttributeDescription, 4>
 		getAttributeDescribtions();
 
 	bool operator==(const Vertex &other) const {

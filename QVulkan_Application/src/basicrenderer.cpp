@@ -18,6 +18,7 @@ BasicRenderer::BasicRenderer(QWindow* window)
 BasicRenderer::~BasicRenderer()
 {
 	//sub deleter (mesh, shader, descriptor, pipeline..)
+	
 	vkDestroyDescriptorPool(m_device, m_descriptorPool, nullptr);
 
 	vkDestroyPipelineLayout(m_device, m_pipelineLayout, nullptr);
@@ -32,12 +33,16 @@ void BasicRenderer::buildProcedural()
 	VkRenderer::buildProcedural();
 	m_shader = new Shader(m_device);
 	buildScene();					//to create vertex and unifrom buffer
+	//m_scene->tuUpdate();
 
 	buildDescriptorSetLayout();
-	buildPipeline0001();			
+	buildPipeline();			
 	buildDescriptorPool();
 	buildDescriptorSet();
 	buildCommandBuffers();
+
+	//test 
+	/*m_scene->tuUpdate();*/
 
 	isBuilt = true;
 }
@@ -47,10 +52,13 @@ void BasicRenderer::buildScene()
 	m_scene = new Scene(this);
 	
 	mesh_ptr mesh = mesh_ptr(new MeshObject);
-
 	meshTool::LoadModel("./model/sphinxfixed.obj", mesh.get());
 
-	m_scene->addObject(mesh);
+	shader_ptr shader = shader_ptr(new Shader(m_device));
+	shader->buildShader("./shader/vert.spv", "./shader/frag.spv");
+
+	m_scene->addElement(mesh);
+	m_scene->addElement(shader);
 
 	m_scene->buildVertexBuffer();
 	m_scene->buildIndiceBuffer();
@@ -94,10 +102,10 @@ void BasicRenderer::buildDescriptorSet()
 	vkAllocateDescriptorSets(m_device, &allocateinfo, &m_descriptorSet);
 
 	//create buffers
-	VkDescriptorBufferInfo bufferinfo{};
+	/*VkDescriptorBufferInfo bufferinfo{};
 	bufferinfo.buffer = m_scene->ubo.buffer;
 	bufferinfo.offset = 0;
-	bufferinfo.range = sizeof(UBODataType);
+	bufferinfo.range = sizeof(UBODataType);*/
 
 	VkDescriptorImageInfo imageInfo{};
 
@@ -124,6 +132,12 @@ void BasicRenderer::buildDescriptorSet()
 	//descriptorWrites[1].pImageInfo = &imageInfo;
 
 	//fixlater for array descriptors
+
+	VkDescriptorBufferInfo bufferinfo{};
+	bufferinfo.buffer = m_scene->ubo.buffer;
+	bufferinfo.offset = 0;
+	bufferinfo.range = sizeof(UBODataType);
+
 	VkWriteDescriptorSet descriptorWrites{};
 	//uniform
 	descriptorWrites.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -133,12 +147,7 @@ void BasicRenderer::buildDescriptorSet()
 	descriptorWrites.descriptorCount = 1;
 	descriptorWrites.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	descriptorWrites.pBufferInfo = &bufferinfo;
-	//sampler
 	
-	
-	//LOG_ERROR("failed to create desriptor sets") <<
-	/*vkUpdateDescriptorSets(m_device, descriptorWrites.size(), descriptorWrites.data(),
-			0, nullptr);*/
 	vkUpdateDescriptorSets(m_device, 1, &descriptorWrites,
 		0, nullptr);
 
@@ -252,87 +261,7 @@ void BasicRenderer::buildDescriptorSetLayout()
 
 void BasicRenderer::buildPipeline()
 {
-	VkPipelineInputAssemblyStateCreateInfo inputAssemblyState{};
-	inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-	inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-	inputAssemblyState.flags = 0;
-	inputAssemblyState.primitiveRestartEnable = VK_FALSE;
-
-	VkPipelineRasterizationStateCreateInfo rasterizationState{};
-	rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-	rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
-	rasterizationState.cullMode = VK_CULL_MODE_BACK_BIT;
-	rasterizationState.frontFace = VK_FRONT_FACE_CLOCKWISE;		//inverse
-	rasterizationState.flags = 0;   
-	//optional
-	rasterizationState.depthClampEnable = VK_FALSE;
-	rasterizationState.lineWidth = 1.0f;
-
-	VkPipelineColorBlendAttachmentState blendAttachmentState{};
-	blendAttachmentState.colorWriteMask = 0xf;
-	blendAttachmentState.blendEnable = VK_FALSE;
-
-	VkPipelineColorBlendStateCreateInfo colorBlendState{};
-	colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	colorBlendState.pNext = NULL;
-	colorBlendState.attachmentCount = 1;
-	colorBlendState.pAttachments = &blendAttachmentState;
-
-	VkPipelineDepthStencilStateCreateInfo depthStencilState{};
-	depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	depthStencilState.depthTestEnable = VK_TRUE;
-	depthStencilState.depthWriteEnable = VK_TRUE;
-	depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-	//not sure
-	depthStencilState.front = depthStencilState.back;
-	depthStencilState.back.compareOp = VK_COMPARE_OP_ALWAYS;
-
-	VkPipelineViewportStateCreateInfo viewportInfo{};
-	viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-	viewportInfo.viewportCount = 1;
-	viewportInfo.scissorCount = 1;
-	viewportInfo.flags = 0;
-	
-	VkPipelineMultisampleStateCreateInfo multisampleState{};
-	multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-	multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-	//not using flag yet
-
-	std::vector<VkDynamicState> dynamicStateEnables{
-		VK_DYNAMIC_STATE_VIEWPORT,
-		VK_DYNAMIC_STATE_SCISSOR
-	};
-
-	VkPipelineDynamicStateCreateInfo dynamicState{};
-	dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-	dynamicState.pDynamicStates = dynamicStateEnables.data();
-	dynamicState.dynamicStateCount = (uint32_t)dynamicStateEnables.size();
-
-	std::array<VkPipelineShaderStageCreateInfo, 2> shaderStage;
-	shaderStage[0] = m_shader->loadShaderStage(".shader/vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-	shaderStage[1] = m_shader->loadShaderStage(".shader/frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-
-	LOG << "created shaders" << ENDL;
-	LOG << "total modules :" << m_shader->m_shaderModules.size() << ENDL;
-
-	VkGraphicsPipelineCreateInfo pipelineCreateinfo{};
-	pipelineCreateinfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	pipelineCreateinfo.pNext = NULL;
-	pipelineCreateinfo.layout = m_pipelineLayout;		//we create before at descriptor set layout
-	pipelineCreateinfo.renderPass = m_renderPass;
-	pipelineCreateinfo.flags = 0;						//no flag atm
-	//fix texture image
-
-	//pipelineCreateinfo.pVertexInputState = 
-
-
-
-}
-
-
-void BasicRenderer::buildPipeline0001()
-{
-	VkShaderModule vertModule = m_shader->loadShader("./shader/vert.spv",
+	/*VkShaderModule vertModule = m_shader->loadShader("./shader/vert.spv",
 		m_device, VK_SHADER_STAGE_VERTEX_BIT);
 	VkShaderModule fragModule = m_shader->loadShader("./shader/frag.spv",
 		m_device, VK_SHADER_STAGE_FRAGMENT_BIT);
@@ -350,7 +279,7 @@ void BasicRenderer::buildPipeline0001()
 	fragStageInfo.module = fragModule;
 	fragStageInfo.pName = "main";
 
-	VkPipelineShaderStageCreateInfo shaderStages[] = { vertStageInfo, fragStageInfo };
+	VkPipelineShaderStageCreateInfo shaderStages[] = { vertStageInfo, fragStageInfo };*/
 
 	//vertex
 	VkPipelineVertexInputStateCreateInfo vertexInputinfo{};
@@ -455,8 +384,8 @@ void BasicRenderer::buildPipeline0001()
 	
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	pipelineInfo.stageCount = 2;
-	pipelineInfo.pStages = shaderStages;
+	/*pipelineInfo.stageCount = 2;
+	pipelineInfo.pStages = shaderStages;*/
 	pipelineInfo.pVertexInputState = &vertexInputinfo;
 	pipelineInfo.pInputAssemblyState = &inputAssembly;
 	pipelineInfo.pViewportState = &viewportStage;
@@ -470,10 +399,11 @@ void BasicRenderer::buildPipeline0001()
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 	
-	//create graphic pipeline
-	/*LOG_ERROR("failed to create graphic pipeline") <<
-		vkCreateGraphicsPipelines(
-			m_device, m_pipelineCache, 1, &pipelineInfo, nullptr, &m_pipeline);*/
+	/*SHADER SECTION*/
+	//test
+	pipelineInfo.stageCount = m_scene->shaders[0]->stageCreateInfos.size();
+	pipelineInfo.pStages = m_scene->shaders[0]->stageCreateInfos.data();
+
 	LOG_ERROR("failed to create mesh graphic pipeline") <<
 		vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo, nullptr, 
 			&m_scene->meshs[0]->pipeline);

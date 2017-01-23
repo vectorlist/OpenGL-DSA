@@ -3,6 +3,9 @@
 #include <vkrenderer.h>
 #include <vkdevice.h>
 
+//#define VML_USE_VULKAN
+//#include <matrix4x4.h>
+
 Scene::Scene(VkRenderer *renderer)
 	: m_renderer(renderer)
 {
@@ -120,7 +123,36 @@ void Scene::initUniformBuffer()
 		ubo.memory,
 		bufferSize);
 	LOG << "prepared uniform buffer size : " << bufferSize << ENDL;
+
+	//TEST
+	//we dont need to destroy staging buffer here
+	//keep alive until program shut down
+	//flash instance
+	//VkDeviceSize tsize = tUbo.typeSize();
+	//vulkanDevice->createBuffer(
+	//	VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+	//	VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+	//	tUbo.stagingBuffer,
+	//	tUbo.stagingMemory,
+	//	tsize);
+	////local allocate memory
+	//vulkanDevice->createBuffer(
+	//	VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+	//	VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+	//	tUbo.buffer,
+	//	tUbo.memory,
+	//	tsize);
 }
+
+//void Scene::tuUpdate()
+//{
+//	tUbo.data.pos = vec3f(1, 1, 0);
+//	void* data;
+//	vkMapMemory(m_device, tUbo.stagingMemory, 0, sizeof(tUbo.data), 0, &data);
+//	memcpy(data, &tUbo.data, sizeof(tUbo.data));
+//	vkUnmapMemory(m_device, tUbo.stagingMemory);
+//	vulkanDevice->copyBuffer(tUbo.stagingBuffer, tUbo.buffer, sizeof(tUbo.data));
+//}
 
 void Scene::buildInputState()
 {
@@ -138,11 +170,17 @@ void Scene::buildInputState()
 
 void Scene::updateUnifomrBuffers()
 {
+	Matrix4x4 rot;
+	rot.rotate(AXIS::Y, 90);
+	ubo.data.model = rot.transposed();
 	float aspect = m_renderer->width / (float)m_renderer->height;
 	ubo.data.proj = vml::perspective(45.f, aspect, 0.01f, 100.0f).transposed();
-	ubo.data.view = vml::lookAt(vec3f(3, 3, 3), vec3f(0, 0, 0), vec3f(0, 1, 0)).transposed();
+	ubo.data.view = vml::lookAt(vec3f(1, 1, 5), vec3f(0, 0, 0), vec3f(0, 1, 0)).transposed();
 
-	ubo.data.proj[1][1] *= -1;
+	//working far now
+	ubo.data.lightPos = vec3f(-5, 5, 5);
+	//we dont need to inverse ndc space we already multiply vulkan clip space
+	//ubo.data.proj[1][1] *= -1;
 
 	void* data;
 	vkMapMemory(m_device, ubo.stagingMemory, 0, sizeof(ubo.data), 0,&data);

@@ -57,6 +57,7 @@ public:
 	Matrix4x4 rotatedZ(float angle) const;
 
 	Matrix4x4 inverted() const;
+	static Matrix4x4 vulkandClip();
 
 	inline float* data() { return *m; }
 	inline const float* constData() const { return *m; }
@@ -135,10 +136,15 @@ namespace vml
 	inline Matrix4x4 perspective(float fovY, float aspect, float znear, float zfar)
 	{
 #	if VML_COORDINATE_SYSTEM == VML_LEFT_HAND
+		if(VML_VULKAN_CLIP)
+			return Matrix4x4::vulkandClip() * perspectiveLH(fovY, aspect, znear, zfar);
 		return perspectiveLH(fovY, aspect, znear, zfar);
 #	else
+		if (VML_VULKAN_CLIP)
+			return Matrix4x4::vulkandClip() * perspectiveRH(fovY, aspect, znear, zfar);
 		return perspectiveRH(fovY, aspect, znear, zfar);	//row for ray tracing(d12)
 #	endif 
+		
 	}
 
 	inline Matrix4x4 lookAtRH(const vec3f &eye,const vec3f& center,const vec3f& upvector)
