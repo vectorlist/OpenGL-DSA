@@ -6,10 +6,10 @@
 #include <vksemaphore.h>
 
 VkRenderer::VkRenderer(QWindow *window)
-	: m_window(window)
+	: m_window(window), m_scene(NULL)
 {
 	m_nativeWindow = reinterpret_cast<HWND>(window->winId());
-	
+	initialize();
 }
 
 
@@ -102,6 +102,7 @@ void VkRenderer::end()
 
 void VkRenderer::resize()
 {
+	if (width == m_window->width() && height == m_window->height()) return;
 	isBuilt = false;
 
 	m_swapchain->buildSwapchain(&width, &height);

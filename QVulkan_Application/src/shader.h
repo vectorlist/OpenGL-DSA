@@ -18,21 +18,25 @@ public:
 	VkDevice m_device;
 
 	//std::array<VkShaderModule, 2> shaderModules;
-	VkShaderModule vertModule = VK_NULL_HANDLE;
-	VkShaderModule fragModule = VK_NULL_HANDLE;
-	std::array<VkPipelineShaderStageCreateInfo, 2> stageCreateInfos;
+	/*VkShaderModule vertModule = VK_NULL_HANDLE;
+	VkShaderModule fragModule = VK_NULL_HANDLE;*/
+	std::vector<VkShaderModule> shaderModules;
+	std::vector<VkPipelineShaderStageCreateInfo> shaderStage;
 
-	void buildShader(const std::string &vert, const std::string &frag);
+	//there is two option
+	void buildSPV(const std::string &vert, const std::string &frag);
+	void buildGLSL(const std::string &vert, const std::string &frag);
 
 private:
-	VkShaderModule loadShader(
-		const std::string &filename, VkShaderStageFlags flag);
+	void loadSPV(
+		const std::string &filename, VkShaderStageFlagBits stage);
 
+	void loadGLSL(
+		const std::string &filename, VkShaderStageFlagBits stage);
 
-	VkPipelineShaderStageCreateInfo stageFromModule(
-		VkShaderModule module, 
-		VkShaderStageFlagBits stage);
-	
+	std::string codeFromFile(const char* filename);
+
+	void release();
 };
 
 typedef std::shared_ptr<Shader> shader_ptr;

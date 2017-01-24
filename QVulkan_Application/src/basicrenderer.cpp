@@ -9,7 +9,7 @@
 #include <vkswapchain.h>
 
 BasicRenderer::BasicRenderer(QWindow* window)
-	: VkRenderer(window), m_scene(NULL)
+	: VkRenderer(window)//, //m_scene(NULL)
 {
 	
 }
@@ -41,14 +41,18 @@ void BasicRenderer::buildProcedural()
 
 void BasicRenderer::buildScene()
 {
+	LOG_SECTION("build scene");
 	m_scene = new Scene(this);
 	
 	mesh_ptr mesh = mesh_ptr(new MeshObject);
 	meshTool::LoadModel("./model/sphinxfixed.obj", mesh.get());
 
 	shader_ptr shader = shader_ptr(new Shader(m_device));
-	shader->buildShader("./shader/vert.spv", "./shader/frag.spv");
-
+	shader->buildSPV("./shader/vert.spv", "./shader/frag.spv");
+	
+	camera_ptr camera = camera_ptr(new Camera);
+	
+	m_scene->addElement(camera);
 	m_scene->addElement(mesh);
 	m_scene->addElement(shader);
 
@@ -328,8 +332,8 @@ void BasicRenderer::buildPipeline()
 	pipelineInfo.pVertexInputState = &m_scene->vertexInputState;
 	
 	/*SHADER STAGE FROM SCENE*/
-	pipelineInfo.stageCount = m_scene->shaders[0]->stageCreateInfos.size();
-	pipelineInfo.pStages = m_scene->shaders[0]->stageCreateInfos.data();
+	pipelineInfo.stageCount = m_scene->shaders[0]->shaderStage.size();
+	pipelineInfo.pStages = m_scene->shaders[0]->shaderStage.data();
 
 	LOG_ERROR("failed to create mesh graphic pipeline") <<
 		vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo, nullptr, 

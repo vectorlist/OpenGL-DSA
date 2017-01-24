@@ -17,22 +17,16 @@
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
 {
-	setConsoleNative(10, 10, 780, 1000);
-	//qApp->setStyle(QStyleFactory::create("Fusion"));
-	
+	setConsoleGeometry(10, 10, 780, 1000,false);
 	setStyleFromfile("./qvulkan.css");
-
-	resize(700, 500);
 
 	m_center = new QWidget;
 	m_layout = new QHBoxLayout;
 	setCentralWidget(m_center);
 	m_center->setLayout(m_layout);
-	
-	//m_label = new QLabel("QVulkan_Application");
+
 	m_glwindow = new GLWindow();
 	
-
 	//m_layout->addWidget(m_glwindow);
 
 	m_renderWindow = new RenderWindow;
@@ -62,27 +56,16 @@ void MainWindow::setStyleFromfile(const string &filename)
 }
 
 
-void MainWindow::setConsoleNative(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+void MainWindow::setConsoleGeometry(
+	uint32_t x, uint32_t y,
+	uint32_t width, uint32_t height, bool isTop)
 {
-	/*AllocConsole();
-	FILE *pFileCon = NULL;
-	pFileCon = freopen("CONOUT$", "w", stdout);
-
-	COORD coordInfo;
-	coordInfo.X = 130;
-	coordInfo.Y = 9000;
-
-	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coordInfo);
-	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_QUICK_EDIT_MODE
-	| ENABLE_EXTENDED_FLAGS);*/
-
-	//fix later
-	/*AllocConsole();
-	AttachConsole(GetCurrentProcessId());
-	FILE *stream;
-	freopen_s(&stream, "COUNT$", "w+", stdout);
-	SetConsoleTitle(TEXT("debugger window"));*/
-
+	
 	HWND console = GetConsoleWindow();
-	MoveWindow(console, x, y, width, height, TRUE);
+	if (!console) return;
+	if(!isTop)
+		MoveWindow(console, x, y, width, height, TRUE);
+	else
+		SetWindowPos(console, HWND_TOPMOST,x, y, width, height,SWP_SHOWWINDOW);
+
 }

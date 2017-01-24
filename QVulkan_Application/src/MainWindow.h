@@ -28,5 +28,7 @@ public:
 
 	vector<int> m_c;
 	void setStyleFromfile(const string &filename);
-	void setConsoleNative(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
+	void setConsoleGeometry(
+		uint32_t x, uint32_t y,
+		uint32_t width, uint32_t height, bool isTop = false);
 };

@@ -8,7 +8,7 @@
 #include <memory>
 #include <shader.h>
 #include <ubo.h>
-
+#include <camera.h>
 
 typedef struct Buffer
 {
@@ -58,29 +58,18 @@ public:
 	VkDevice m_device;
 	bool isBuilt = false;
 
-	/*MESH*/
 	std::vector<mesh_ptr> meshs;
-
-	/*SHADER*/
 	std::vector<shader_ptr> shaders;
+	UBO ubo;
+	camera_ptr camera;
 
 	VkPipelineVertexInputStateCreateInfo vertexInputState = {};
 	std::array<VkVertexInputAttributeDescription,4> vertexInputAttrib;
 	VkVertexInputBindingDescription vertexInputBinding;
 
-
-	/*VERTEX BUFFER*/
 	void buildVertexBuffer();
 	void buildIndiceBuffer();
-
-	/*UNIFORM BUFFER*/
-	UBO ubo;
-	//UniformSet<testData> tUbo;
 	void initUniformBuffer();
-	//void tuUpdate();
-	
-
-	/*BUILD DESCRTIPTION AND STATE*/
 	void buildInputState();
 
 	void updateUnifomrBuffers();
@@ -89,6 +78,8 @@ public:
 
 	void addElement(mesh_ptr mesh);
 	void addElement(shader_ptr shader);
+	void addElement(camera_ptr cam);
+
 
 	//built in
 	void destroyBuffer(VkBuffer buffer, VkDeviceMemory memory);
@@ -104,6 +95,12 @@ inline void Scene::addElement(mesh_ptr mesh)
 inline void Scene::addElement(shader_ptr shader)
 {
 	shaders.push_back(shader);
+}
+
+inline void Scene::addElement(camera_ptr cam)
+{
+	if (camera != nullptr) return;
+	camera = cam;
 }
 
 inline void Scene::destroyBuffer(VkBuffer buffer, VkDeviceMemory memory)

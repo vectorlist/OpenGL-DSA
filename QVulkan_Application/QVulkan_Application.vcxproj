@@ -85,6 +85,7 @@
     <ClCompile Include="..\include\core\matrix4x4.cpp" />
     <ClCompile Include="..\include\core\vec3f.cpp" />
     <ClCompile Include="src\basicrenderer.cpp" />
+    <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\glshader.cpp" />
     <ClCompile Include="src\glwindow.cpp" />
@@ -94,6 +95,7 @@
     <ClCompile Include="src\renderwindow.cpp" />
     <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\vertex.cpp" />
     <ClCompile Include="src\vklog.cpp" />
     <ClCompile Include="src\vkrenderer_sub.cpp" />
@@ -111,6 +113,7 @@
     <ClInclude Include="..\include\core\vec3f.h" />
     <ClInclude Include="..\include\core\vml.h" />
     <ClInclude Include="src\basicrenderer.h" />
+    <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\glshader.h" />
     <ClInclude Include="src\glwindow.h" />
     <ClInclude Include="src\MainWindow.h" />
@@ -118,6 +121,7 @@
     <ClInclude Include="src\renderwindow.h" />
     <ClInclude Include="src\scene.h" />
     <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\texture.h" />
     <ClInclude Include="src\ubo.h" />
     <ClInclude Include="src\vertex.h" />
     <ClInclude Include="src\vklog.h" />

@@ -65,6 +65,12 @@
     <ClCompile Include="src\shader.cpp">
       <Filter>Vulkan\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\camera.cpp">
+      <Filter>Vulkan\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture.cpp">
+      <Filter>Vulkan\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h">
@@ -137,6 +143,12 @@
       <Filter>Vulkan\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\ubo.h">
+      <Filter>Vulkan\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\camera.h">
+      <Filter>Vulkan\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture.h">
       <Filter>Vulkan\Scene</Filter>
     </ClInclude>
   </ItemGroup>

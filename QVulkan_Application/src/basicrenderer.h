@@ -4,7 +4,6 @@
 
 class QWindow;
 class Shader;
-class Scene;
 class BasicRenderer : public VkRenderer
 {
 public:
@@ -16,7 +15,6 @@ public:
 	VkDescriptorSetLayout m_descriptorSetLayout;
 	VkDescriptorPool m_descriptorPool;
 
-	Scene *m_scene;
 	void buildProcedural();
 	void buildScene();
 	void buildDescriptorSetLayout();

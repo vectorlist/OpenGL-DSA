@@ -2,12 +2,15 @@
 
 #include <vulkan/vulkan.h>
 #include <vector>
+#include <vec2f.h>
+#include <vec3f.h>
 
 class QWindow;
 class VulkanInstance;
 class VulkanDevice;
 class VulkanSwapchain;
 class VulkanSemaphore;
+class Scene;
 class VkRenderer
 {
 public:
@@ -72,6 +75,8 @@ public:
 	VkClearColorValue defaultClearColor = { { 0.125f, 0.125f, 0.125f, 1.0f } };
 	bool isBuilt = false;
 
+	Scene *m_scene;
+
 	/*MAIN FUNCTION*/
 	void initialize();
 	virtual void buildProcedural();
@@ -96,6 +101,22 @@ public:
 	void begin();				//frame
 	void end();					//sumit
 	void resize();
+	//test
+	void update()
+	{
+		if (!isBuilt) return;
+		updateUniformBuffers();
+		render();
+	}
+
+
+	//TEST
+
+	vec2i mousePos;
+	vec3f rot;
+	float distance = -5;
+	float speed = 0.2f;
 	
+protected:
 };
 
