@@ -5,91 +5,79 @@
     <ClCompile Include="..\include\core\color.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\MainWindow.cpp">
-      <Filter>Qt</Filter>
-    </ClCompile>
-    <ClCompile Include="src\renderwindow.cpp">
-      <Filter>Qt</Filter>
-    </ClCompile>
     <ClCompile Include="..\include\core\matrix4x4.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\glshader.cpp">
-      <Filter>OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\glwindow.cpp">
-      <Filter>OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="..\include\core\vec3f.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\vkdevice.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vkinstance.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vklog.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\glad.c">
+    <ClCompile Include="src\Opengl\glad.c">
       <Filter>OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\vkswapchain.cpp">
+    <ClCompile Include="src\Opengl\glshader.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Opengl\glwindow.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Qt\MainWindow.cpp">
+      <Filter>Qt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Qt\renderwindow.cpp">
+      <Filter>Qt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\vkrenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\vkrenderer_sub.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\basicrenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\texturerenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\texture.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\vertex.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\camera.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\mesh.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\shader.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vk\vktools.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\vktexture.cpp">
+    <ClCompile Include="src\Vk\vkdevice.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\vktools.cpp">
+    <ClCompile Include="src\Vk\vkinstance.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\basicrenderer.cpp">
-      <Filter>Vulkan\Renderer</Filter>
+    <ClCompile Include="src\Vk\vklog.cpp">
+      <Filter>Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\vkrenderer.cpp">
-      <Filter>Vulkan\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vkrenderer_sub.cpp">
-      <Filter>Vulkan\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene.cpp">
-      <Filter>Vulkan\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mesh.cpp">
-      <Filter>Vulkan\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vertex.cpp">
-      <Filter>Vulkan\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shader.cpp">
-      <Filter>Vulkan\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\camera.cpp">
-      <Filter>Vulkan\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\texture.cpp">
-      <Filter>Vulkan\Scene</Filter>
+    <ClCompile Include="src\Vk\vkswapchain.cpp">
+      <Filter>Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\MainWindow.h">
-      <Filter>Qt</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderwindow.h">
-      <Filter>Qt</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core\matrix4x4.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\glshader.h">
-      <Filter>OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\glwindow.h">
-      <Filter>OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core\vec2f.h">
       <Filter>Core</Filter>
@@ -97,59 +85,71 @@
     <ClInclude Include="..\include\core\vec3f.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\vkdevice.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="vkinitializer.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\vkinstance.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\vklog.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="vksemaphore.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\vkswapchain.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\vktexture.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\vktools.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core\vml.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\basicrenderer.h">
-      <Filter>Vulkan\Renderer</Filter>
+    <ClInclude Include="src\Opengl\glwindow.h">
+      <Filter>OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\vkrenderer.h">
-      <Filter>Vulkan\Renderer</Filter>
+    <ClInclude Include="src\Opengl\glshader.h">
+      <Filter>OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\scene.h">
-      <Filter>Vulkan\Scene</Filter>
+    <ClInclude Include="src\Qt\renderwindow.h">
+      <Filter>Qt</Filter>
     </ClInclude>
-    <ClInclude Include="src\mesh.h">
-      <Filter>Vulkan\Scene</Filter>
+    <ClInclude Include="src\Qt\MainWindow.h">
+      <Filter>Qt</Filter>
     </ClInclude>
-    <ClInclude Include="src\shader.h">
-      <Filter>Vulkan\Scene</Filter>
+    <ClInclude Include="src\Renderer\vkrenderer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\vertex.h">
-      <Filter>Vulkan\Scene</Filter>
+    <ClInclude Include="src\Renderer\basicrenderer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\ubo.h">
-      <Filter>Vulkan\Scene</Filter>
+    <ClInclude Include="src\Renderer\texturerenderer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\camera.h">
-      <Filter>Vulkan\Scene</Filter>
+    <ClInclude Include="src\Scene\shader.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\texture.h">
-      <Filter>Vulkan\Scene</Filter>
+    <ClInclude Include="src\Scene\texture.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ubo.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\vertex.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\camera.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\mesh.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vk\vktools.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vk\vkdevice.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vk\vkinitializer.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vk\vkinstance.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vk\vklog.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vk\vksemaphore.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vk\vkswapchain.h">
+      <Filter>Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -165,12 +165,6 @@
     <Filter Include="Qt">
       <UniqueIdentifier>{aad57249-45fc-4fd2-87c0-bb90372c5ec7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Vulkan\Renderer">
-      <UniqueIdentifier>{784ef821-6a69-45a1-811f-1c5412828958}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vulkan\Scene">
-      <UniqueIdentifier>{d003655f-6bd6-47bb-9cb1-991eacaa3ccc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;cxx;c;def</Extensions>
@@ -180,6 +174,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h</Extensions>
       <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{784ef821-6a69-45a1-811f-1c5412828958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{d003655f-6bd6-47bb-9cb1-991eacaa3ccc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 #include <qwindow.h>
 #include <Windows.h>
 #include <MainWindow.h>
-#include <vktexture.h>
+
 
 //#define CHECK_LEAK
 #ifdef CHECK_LEAK
@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 	MainWindow mw;
 	mw.setGeometry(810, 300, 940, 620);
 	mw.show();
-	
+
+
 	return a.exec();
 }

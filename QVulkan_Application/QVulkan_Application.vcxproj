@@ -48,8 +48,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;QT_WIDGETS_LIB;VK_USE_PLATFORM_WIN32_KHR;_USE_MATH_DEFINES;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;.\src;..\include\core;..\include;.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VK_NV_GLSL_SHADER_EXTENSION_NAME;WIN32;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;QT_WIDGETS_LIB;VK_USE_PLATFORM_WIN32_KHR;_USE_MATH_DEFINES;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\src\Renderer;.\src\Qt;.\src\Vk;.\src\Opengl;.\src\Scene;.;.\src;..\include\core;..\include;.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -84,27 +84,27 @@
     <ClCompile Include="..\include\core\color.cpp" />
     <ClCompile Include="..\include\core\matrix4x4.cpp" />
     <ClCompile Include="..\include\core\vec3f.cpp" />
-    <ClCompile Include="src\basicrenderer.cpp" />
-    <ClCompile Include="src\camera.cpp" />
-    <ClCompile Include="src\glad.c" />
-    <ClCompile Include="src\glshader.cpp" />
-    <ClCompile Include="src\glwindow.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MainWindow.cpp" />
-    <ClCompile Include="src\mesh.cpp" />
-    <ClCompile Include="src\renderwindow.cpp" />
-    <ClCompile Include="src\scene.cpp" />
-    <ClCompile Include="src\shader.cpp" />
-    <ClCompile Include="src\texture.cpp" />
-    <ClCompile Include="src\vertex.cpp" />
-    <ClCompile Include="src\vklog.cpp" />
-    <ClCompile Include="src\vkrenderer_sub.cpp" />
-    <ClCompile Include="src\vkswapchain.cpp" />
-    <ClCompile Include="src\vktools.cpp" />
-    <ClCompile Include="src\vkdevice.cpp" />
-    <ClCompile Include="src\vkinstance.cpp" />
-    <ClCompile Include="src\vkrenderer.cpp" />
-    <ClCompile Include="src\vktexture.cpp" />
+    <ClCompile Include="src\Opengl\glad.c" />
+    <ClCompile Include="src\Opengl\glshader.cpp" />
+    <ClCompile Include="src\Opengl\glwindow.cpp" />
+    <ClCompile Include="src\Qt\MainWindow.cpp" />
+    <ClCompile Include="src\Qt\renderwindow.cpp" />
+    <ClCompile Include="src\Renderer\basicrenderer.cpp" />
+    <ClCompile Include="src\Renderer\texturerenderer.cpp" />
+    <ClCompile Include="src\Renderer\vkrenderer.cpp" />
+    <ClCompile Include="src\Renderer\vkrenderer_sub.cpp" />
+    <ClCompile Include="src\Scene\camera.cpp" />
+    <ClCompile Include="src\Scene\mesh.cpp" />
+    <ClCompile Include="src\Scene\scene.cpp" />
+    <ClCompile Include="src\Scene\shader.cpp" />
+    <ClCompile Include="src\Scene\texture.cpp" />
+    <ClCompile Include="src\Scene\vertex.cpp" />
+    <ClCompile Include="src\Vk\vkdevice.cpp" />
+    <ClCompile Include="src\Vk\vkinstance.cpp" />
+    <ClCompile Include="src\Vk\vklog.cpp" />
+    <ClCompile Include="src\Vk\vkswapchain.cpp" />
+    <ClCompile Include="src\Vk\vktools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h" />
@@ -112,27 +112,27 @@
     <ClInclude Include="..\include\core\vec2f.h" />
     <ClInclude Include="..\include\core\vec3f.h" />
     <ClInclude Include="..\include\core\vml.h" />
-    <ClInclude Include="src\basicrenderer.h" />
-    <ClInclude Include="src\camera.h" />
-    <ClInclude Include="src\glshader.h" />
-    <ClInclude Include="src\glwindow.h" />
-    <ClInclude Include="src\MainWindow.h" />
-    <ClInclude Include="src\mesh.h" />
-    <ClInclude Include="src\renderwindow.h" />
-    <ClInclude Include="src\scene.h" />
-    <ClInclude Include="src\shader.h" />
-    <ClInclude Include="src\texture.h" />
-    <ClInclude Include="src\ubo.h" />
-    <ClInclude Include="src\vertex.h" />
-    <ClInclude Include="src\vklog.h" />
-    <ClInclude Include="src\vkswapchain.h" />
-    <ClInclude Include="src\vktools.h" />
-    <ClInclude Include="src\vkdevice.h" />
-    <ClInclude Include="src\vkinstance.h" />
-    <ClInclude Include="src\vkrenderer.h" />
-    <ClInclude Include="src\vktexture.h" />
-    <ClInclude Include="vkinitializer.h" />
-    <ClInclude Include="vksemaphore.h" />
+    <ClInclude Include="src\Opengl\glshader.h" />
+    <ClInclude Include="src\Opengl\glwindow.h" />
+    <ClInclude Include="src\Qt\MainWindow.h" />
+    <ClInclude Include="src\Qt\renderwindow.h" />
+    <ClInclude Include="src\Renderer\basicrenderer.h" />
+    <ClInclude Include="src\Renderer\texturerenderer.h" />
+    <ClInclude Include="src\Renderer\vkrenderer.h" />
+    <ClInclude Include="src\Scene\camera.h" />
+    <ClInclude Include="src\Scene\mesh.h" />
+    <ClInclude Include="src\Scene\scene.h" />
+    <ClInclude Include="src\Scene\shader.h" />
+    <ClInclude Include="src\Scene\texture.h" />
+    <ClInclude Include="src\Scene\ubo.h" />
+    <ClInclude Include="src\Scene\vertex.h" />
+    <ClInclude Include="src\Vk\vkdevice.h" />
+    <ClInclude Include="src\Vk\vkinitializer.h" />
+    <ClInclude Include="src\Vk\vkinstance.h" />
+    <ClInclude Include="src\Vk\vklog.h" />
+    <ClInclude Include="src\Vk\vksemaphore.h" />
+    <ClInclude Include="src\Vk\vkswapchain.h" />
+    <ClInclude Include="src\Vk\vktools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
