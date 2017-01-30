@@ -75,6 +75,7 @@ public:
 
 	VkClearColorValue defaultClearColor = { { 0.125f, 0.125f, 0.125f, 1.0f } };
 	bool isBuilt = false;
+	bool enableValidation;
 
 	Scene *m_scene;
 
@@ -91,8 +92,11 @@ public:
 	void buildPipelineCache();
 	void buildFrameBuffer();
 
-	/*ADDITIONAL FUNCTIONS*/
+	/*COMMAND BUFFER FUNCTIONS*/
 	virtual void buildCommandBuffers() {};
+	bool checkCommandBuffers();
+	void releaseCommandBuffers();
+	void rebuildCommandBuffers();
 
 	/*DERIVED OVERRIDE*/
 	virtual void render() = 0;
@@ -110,6 +114,10 @@ public:
 		render();
 	}
 
+	virtual void updateShader()
+	{
+
+	}
 
 	//TEST
 

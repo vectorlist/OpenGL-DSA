@@ -55,13 +55,7 @@ void TextureRenderer::buildScene()
 	//SPV
 	shader->buildSPV("./shader/texturerenderer/vert.spv", "./shader/texturerenderer/frag.spv");
 	//shader->buildGLSL("./shader/texturerenderer/shader.vert", "./shader/texturerenderer/shader.frag");
-	//shader->loadShaderGLSL("./shader/texturerenderer/shader.vert",m_device,
-	//VK_SHADER_STAGE_VERTEX_BIT);
-
-	//have  a look
-	VkShaderModule testModule = shaderTool::loadShaderGLSL("./shader/texturerenderer/triangle.vert", m_device,
-		VK_SHADER_STAGE_VERTEX_BIT);
-
+	
 	camera_ptr camera = camera_ptr(new Camera);
 
 	m_scene->addElement(camera);
@@ -197,7 +191,7 @@ void TextureRenderer::buildPipeline()
 	dynamicState.dynamicStateCount = (uint32_t)dynamicStateEnables.size();
 
 
-	VkGraphicsPipelineCreateInfo pipelineInfo = {};
+	//VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	//pipelineInfo.pVertexInputState = &vertexInputinfo;
 	pipelineInfo.pInputAssemblyState = &inputAssembly;
@@ -225,6 +219,13 @@ void TextureRenderer::buildPipeline()
 		vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo, nullptr,
 				&mesh->pipeline);
 	}
+
+	shader_ptr shader = shader_ptr(new Shader(m_device));
+	shader->buildGLSL("./shader/texturerenderer/fix.vert", "./shader/texturerenderer/fix.frag");
+
+	rasterState.polygonMode = VK_POLYGON_MODE_LINE;
+	pipelineInfo.stageCount = shader->shaderStage.size();
+	pipelineInfo.pStages = shader->shaderStage.data();
 
 	vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo, nullptr,
 		&m_scene->wireframePipeline);
@@ -345,7 +346,7 @@ void TextureRenderer::buildCommandBuffers()
 
 		for (auto& mesh : m_scene->meshs)
 		{
-			mesh->render(m_commandBuffers[i]);
+			mesh->render(m_commandBuffers[i], m_scene->wireframePipeline, stageindex);
 		}
 
 		vkCmdEndRenderPass(m_commandBuffers[i]);
@@ -377,4 +378,29 @@ void TextureRenderer::render()
 void TextureRenderer::updateUniformBuffers()
 {
 	m_scene->updateUnifomrBuffers();
+}
+
+void TextureRenderer::updateShader()
+{
+	//vkDeviceWaitIdle(m_device);
+	//LOG << "working" << ENDL;
+	////vkDestroyPipeline(m_device, m_scene->meshs[0]->pipeline, nullptr);
+	////m_scene->meshs[0]->pipeline = VK_NULL_HANDLE;
+	/*VkGraphicsPipelineCreateInfo info = pipelineInfo;
+
+	shader_ptr shader = m_scene->shaders[0];
+	shader->buildGLSL("./shader/texturerenderer/fix.vert", "./shader/texturerenderer/fix.frag");
+
+	info.stageCount = shader->shaderStage.size();
+	info.pStages = shader->shaderStage.data();
+	vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &info, nullptr, 
+		&fixPipeline);*/
+	if (!stageindex)
+	{
+		stageindex = true;
+	}
+	else
+		stageindex = false;
+	rebuildCommandBuffers();
+	update();
 }

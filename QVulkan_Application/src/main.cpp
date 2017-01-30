@@ -14,10 +14,10 @@ int main(int argc, char *argv[])
 {
 
 	QApplication a(argc, argv);
+
 	MainWindow mw;
 	mw.setGeometry(810, 300, 940, 620);
 	mw.show();
-
-
+	
 	return a.exec();
 }

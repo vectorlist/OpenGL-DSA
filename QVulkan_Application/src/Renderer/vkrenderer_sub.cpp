@@ -212,3 +212,32 @@ void VkRenderer::buildFrameBuffer()
 	}
 
 }
+
+bool VkRenderer::checkCommandBuffers()
+{
+	for (auto& cmdBuffer : m_commandBuffers)
+	{
+		if (cmdBuffer == VK_NULL_HANDLE)
+			return false;
+	}
+	return true;
+}
+
+void VkRenderer::releaseCommandBuffers()
+{
+	vkFreeCommandBuffers(m_device, m_commandPool, m_commandBuffers.size(), m_commandBuffers.data());
+	for (auto& cmdBuffer : m_commandBuffers)
+	{
+		cmdBuffer = VK_NULL_HANDLE;
+	}
+}
+
+void VkRenderer::rebuildCommandBuffers()
+{
+	if (!checkCommandBuffers())
+	{
+		releaseCommandBuffers();
+		allocateCommandBuffers();
+	}
+	buildCommandBuffers();
+}

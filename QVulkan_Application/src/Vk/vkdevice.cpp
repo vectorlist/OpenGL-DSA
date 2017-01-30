@@ -58,7 +58,7 @@ void VulkanDevice::buildPhysicalDevice()
 		for (auto ext : extensions)
 		{
 			m_supportedExtensions.push_back(ext.extensionName);
-			LOG << "extension : " << ext.extensionName << ENDL;
+			LOG << "supported device extension : " << ext.extensionName << ENDL;
 		}
 	}
 
@@ -69,6 +69,7 @@ void VulkanDevice::buildLogicalDevice(
 	bool useSwapcahin,
 	VkQueueFlags requestedQueueTypes)
 {
+	LOG_SECTION("create logical device");
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
 
 	// Get queue family indices for the requested queue family types
@@ -142,7 +143,7 @@ void VulkanDevice::buildLogicalDevice(
 		// If the device will be used for presenting to a display
 		//via a swapchain we need to request the swapchain extension
 		deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
-		deviceExtensions.push_back("VK_NV_glsl_shader");
+		deviceExtensions.push_back(VK_NV_GLSL_SHADER_EXTENSION_NAME);
 	}
 
 	VkDeviceCreateInfo deviceCreateInfo = {};
@@ -154,15 +155,14 @@ void VulkanDevice::buildLogicalDevice(
 	deviceCreateInfo.enabledExtensionCount = (uint32_t)deviceExtensions.size();
 	deviceCreateInfo.ppEnabledExtensionNames = deviceExtensions.data();
 	
-	//deviceCreateInfo.pEnabledFeatures = &m_features;
-
 	// Enable the debug marker extension if it is present (likely meaning a debugging tool is present)
 	if (extensionSupported(VK_EXT_DEBUG_MARKER_EXTENSION_NAME))
 	{
 		deviceExtensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
 		//enableDebugMarkers = true;
 	}
-
+	for (auto &ext : deviceExtensions)
+		LOG << "enable device extensions : " << ext << ENDL;
 	if (deviceExtensions.size() > 0)
 	{
 		deviceCreateInfo.enabledExtensionCount = (uint32_t)deviceExtensions.size();
@@ -172,8 +172,6 @@ void VulkanDevice::buildLogicalDevice(
 	LOG_ERROR("failed to create logical device") <<
 	vkCreateDevice(m_physicalDevice, &deviceCreateInfo, nullptr, &m_device);
 		
-
-	
 	// Create a default command pool for graphics command buffers
 	m_commandPool = createCommandPool(m_queueFamilyIndices.graphics);
 	

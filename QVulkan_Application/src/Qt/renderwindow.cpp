@@ -43,6 +43,10 @@ void RenderWindow::mousePressEvent(QMouseEvent *e)
 		m_mousePos.x = e->pos().x();
 		m_mousePos.y = e->pos().y();
 	}
+	if (e->buttons() == Qt::RightButton)
+	{
+		m_renderer->updateShader();
+	}
 	QWindow::mousePressEvent(e);
 }
 
@@ -60,7 +64,6 @@ void RenderWindow::mouseMoveEvent(QMouseEvent*e)
 		
 		m_mousePos = { posx, posy };
 		m_renderer->update();
-		
 	}
 	QWindow::mouseMoveEvent(e);
 }

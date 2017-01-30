@@ -185,7 +185,7 @@ void BasicRenderer::buildCommandBuffers()
 
 		for (auto& mesh : m_scene->meshs)
 		{
-			mesh->render(m_commandBuffers[i]);
+			//mesh->render(m_commandBuffers[i]);
 		}
 
 		vkCmdEndRenderPass(m_commandBuffers[i]);

@@ -3,8 +3,8 @@
 #include <qwindow.h>
 
 
-VulkanInstance::VulkanInstance(VkInstance &instance, VkSurfaceKHR &surface)
-	: m_instance(instance), m_surface(surface)
+VulkanInstance::VulkanInstance(VkInstance &instance, VkSurfaceKHR &surface, bool enablevalidation)
+	: m_instance(instance), m_surface(surface), enableValidation(enablevalidation)
 {
 	
 }
@@ -23,17 +23,15 @@ VulkanInstance::~VulkanInstance()
 	m_instance = VK_NULL_HANDLE;
 }
 
-void VulkanInstance::buildLayers(bool enableValidation)
+void VulkanInstance::buildLayers()
 {
 	/*INSTANCE LAYERS*/
 	m_layers.push_back("VK_LAYER_LUNARG_standard_validation");
-
+	//VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	/*EXTENTION LAYERS*/
 	m_extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
 	m_extensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
-	//m_extensions.push_back(VK_NV_GLSL_SHADER_EXTENSION_NAME);
-	//m_extensions.push_back("VK_NV_glsl_shader");			//push back
-	//m_extensions.push_back("GL_KHR_vulkan_glsl");
+
 	if (enableValidation)
 		m_extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 
@@ -50,18 +48,21 @@ void VulkanInstance::buildInstance()
 	VkInstanceCreateInfo instanceCreateInfo{};
 	instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	instanceCreateInfo.pApplicationInfo = &appInfo;
-	instanceCreateInfo.enabledLayerCount = (uint32_t)m_layers.size();
-	instanceCreateInfo.ppEnabledLayerNames = m_layers.data();
-	instanceCreateInfo.enabledExtensionCount = (uint32_t)m_extensions.size();
+	if (enableValidation)
+	{
+		instanceCreateInfo.enabledLayerCount = m_layers.size();
+		instanceCreateInfo.ppEnabledLayerNames = m_layers.data();
+	}
+
+	instanceCreateInfo.enabledExtensionCount = m_extensions.size();
 	instanceCreateInfo.ppEnabledExtensionNames = m_extensions.data();
-	//add this?
 
 	LOG_ERROR("failed to create instance") <<
-		vkCreateInstance(&instanceCreateInfo, nullptr, &m_instance);
+	vkCreateInstance(&instanceCreateInfo, nullptr, &m_instance);
 
 }
 
-void VulkanInstance::buildDebug(bool enableValidation)
+void VulkanInstance::buildDebug()
 {
 	if (!enableValidation) return;
 	LOG_SECTION("create debug callback funtion");
@@ -71,7 +72,7 @@ void VulkanInstance::buildDebug(bool enableValidation)
 	createInfo.pfnCallback = debugCallback;
 
 	LOG_ERROR("failed to create debug callback funtion") <<
-		vkDebug::CreateDebugReportCallbackEXT(m_instance, &createInfo, nullptr, &m_callback);
+	vkDebug::CreateDebugReportCallbackEXT(m_instance, &createInfo, nullptr, &m_callback);
 	
 }
 

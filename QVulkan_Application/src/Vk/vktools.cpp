@@ -38,19 +38,7 @@ namespace vkDebug
 
 namespace vkTool
 {
-	std::vector<const char*> getRequiredExtenstions()
-	{
-		std::vector<const char*> extensions;
-		extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
-		extensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
-
-		if (enableValidationLayers) {
-			extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-		}
-
-		return extensions;
-	}
-
+	
 	std::vector<char> readfile(const std::string & filename)
 	{
 		std::ifstream file(filename, std::ios::ate | std::ios::binary);

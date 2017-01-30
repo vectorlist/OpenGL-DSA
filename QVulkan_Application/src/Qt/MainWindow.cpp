@@ -15,7 +15,7 @@
 #pragma endregion
 
 MainWindow::MainWindow(QWidget* parent)
-	: QMainWindow(parent)
+	: QMainWindow(parent), m_glwindow(NULL), m_renderWindow(NULL)
 {
 	setConsoleGeometry(10, 10, 780, 1000,false);
 	setStyleFromfile("./qvulkan.css");
@@ -25,14 +25,16 @@ MainWindow::MainWindow(QWidget* parent)
 	setCentralWidget(m_center);
 	m_center->setLayout(m_layout);
 
-	m_glwindow = new GLWindow();
-	
-	//m_layout->addWidget(m_glwindow);
+	//m_glwindow = new GLWindow();
+	/*m_layout->addWidget(m_glwindow);*/
 
 	m_renderWindow = new RenderWindow;
 	m_renderWindowContainer = QWidget::createWindowContainer(m_renderWindow);
 	m_layout->addWidget(m_renderWindowContainer);
 
+
+	//m_infoWidget = new InfoWidget(this);
+	//m_layout->addWidget(m_infoWidget);
 }
 
 

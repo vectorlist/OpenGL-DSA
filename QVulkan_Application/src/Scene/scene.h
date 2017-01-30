@@ -26,11 +26,14 @@ struct MeshObject
 
 	VkPipeline pipeline;
 
-	void render(VkCommandBuffer cmd)
+	void render(VkCommandBuffer cmd, VkPipeline inPipeline, bool stage)
 	{
 		VkDeviceSize offset[1] = { 0 };
 
-		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+		if (!stage)
+			vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+		else
+			vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, inPipeline);
 		vkCmdBindVertexBuffers(cmd, 0, 1, &vbo.buffer, offset);
 		vkCmdBindIndexBuffer(cmd, ibo.buffer, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdDrawIndexed(cmd, indices.size(), 1, 0, 0, 0);

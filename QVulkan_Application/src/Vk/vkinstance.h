@@ -6,14 +6,15 @@ class QWindow;
 class VulkanInstance
 {
 public:
-	VulkanInstance(VkInstance &instance, VkSurfaceKHR &surface);
+	VulkanInstance(VkInstance &instance, VkSurfaceKHR &surface, bool enablevalidation = true);
 	~VulkanInstance();
 
-	void buildLayers(bool enableValidation);
+	void buildLayers();
 	void buildInstance();
-	void buildDebug(bool enableValidation);
+	void buildDebug();
 	void buildSurface(HWND nativeWindow);
 
+	bool enableValidation;
 	std::vector<const char*> m_layers;
 	std::vector<const char*> m_extensions;
 	VkInstance &m_instance /*= VK_NULL_HANDLE*/;

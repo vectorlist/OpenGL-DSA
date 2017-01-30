@@ -16,6 +16,8 @@ public:
 	VkDescriptorSetLayout m_descriptorSetLayout;
 	VkDescriptorPool m_descriptorPool;
 
+	VkGraphicsPipelineCreateInfo pipelineInfo{};
+
 	void buildProcedural();
 	void buildScene();
 	void buildDescriptorSetLayout();
@@ -30,7 +32,12 @@ public:
 	
 	void render();
 	void updateUniformBuffers();
+	/*void updateShader();*/
 	int count = 0;
+
+	void updateShader();
+	bool stageindex = false;
+	VkPipeline fixPipeline;
 private:
 	VkPrimitiveTopology defaultTopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 };

@@ -9,9 +9,7 @@ VkRenderer::VkRenderer(QWindow *window)
 	: m_window(window), m_scene(NULL)
 {
 	m_nativeWindow = reinterpret_cast<HWND>(window->winId());
-
-	
-	
+	enableValidation = false;
 }
 
 
@@ -21,7 +19,7 @@ VkRenderer::~VkRenderer()
 	m_swapchain->clean();
 	SAFE_DELETE(m_swapchain);
 	
-	vkFreeCommandBuffers(m_device, m_commandPool, m_commandBuffers.size(), m_commandBuffers.data());
+	releaseCommandBuffers();
 	//sub build funtions
 	vkDestroyRenderPass(m_device, m_renderPass, nullptr);
 	for (uint32_t i = 0; i < m_frameBuffers.size(); i++)
@@ -47,10 +45,10 @@ VkRenderer::~VkRenderer()
 void VkRenderer::initialize()
 {
 	//basic core initialize(instance, device, physicaldevice surface)
-	m_vulkanInstance = new VulkanInstance(m_instance, m_surface);
-	m_vulkanInstance->buildLayers(true);
+	m_vulkanInstance = new VulkanInstance(m_instance, m_surface, enableValidation);
+	m_vulkanInstance->buildLayers();
 	m_vulkanInstance->buildInstance();
-	m_vulkanInstance->buildDebug(true);
+	m_vulkanInstance->buildDebug();
 	m_vulkanInstance->buildSurface(m_nativeWindow);
 
 	m_vulkanDevice = new VulkanDevice(m_instance, m_device, m_physicalDevice);

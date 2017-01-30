@@ -34,21 +34,6 @@
 #endif
 
 
-#define NDEBUG
-#ifdef NDEBUG
-const bool enableValidationLayers = false;
-#else
-const bool enableValidationLayers = true;
-#endif
-
-const std::vector<const char*> validationLayers = {
-	"VK_LAYER_LUNARG_standard_validation"
-};
-
-const std::vector<const char*> deviceExtensions = {
-	VK_KHR_SWAPCHAIN_EXTENSION_NAME
-};
-
 extern VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 	VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t obj,
 	size_t location, int32_t code, const char* layerPrefix, const char* msg, void* userData);
@@ -81,7 +66,6 @@ struct SwapChainSupportDetails {
 
 namespace vkTool
 {
-	std::vector<const char*> getRequiredExtenstions();
 	std::vector<char> readfile(const std::string &filename);
 	std::array<VkClearValue, 2> defalutClearValue();
 	
