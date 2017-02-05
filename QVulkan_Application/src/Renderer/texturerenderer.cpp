@@ -2,7 +2,6 @@
 #include <qwindow.h>
 #include <vktools.h>
 #include <vkinitializer.h>
-#include <shader.h>
 #include <scene.h>
 #include <mesh.h>
 #include <vertex.h>
@@ -18,6 +17,12 @@ TextureRenderer::TextureRenderer(QWindow* window)
 
 TextureRenderer::~TextureRenderer()
 {
+
+	if (soildPipeline)
+		vkDestroyPipeline(m_device, soildPipeline, nullptr);
+	if (wirePipeline)
+		vkDestroyPipeline(m_device, wirePipeline, nullptr);
+
 	SAFE_DELETE(m_texture);
 	SAFE_DELETE(m_scene);
 
@@ -48,13 +53,13 @@ void TextureRenderer::buildScene()
 	LOG_SECTION("build scene");
 	m_scene = new Scene(this);
 
-	mesh_ptr mesh = mesh_ptr(new MeshObject);
-	meshTool::LoadModel("./model/sphinxfixed.obj", mesh.get());
+	vkmesh_ptr mesh = vkmesh_ptr(new VKMesh);
+	meshTool::LoadModel("./model/stone.obj", mesh.get());
 
 	shader_ptr shader = shader_ptr(new Shader(m_device));
 	//SPV
-	shader->buildSPV("./shader/texturerenderer/vert.spv", "./shader/texturerenderer/frag.spv");
-	//shader->buildGLSL("./shader/texturerenderer/shader.vert", "./shader/texturerenderer/shader.frag");
+	//shader->buildSPV("./shader/texturerenderer/vert.spv", "./shader/texturerenderer/frag.spv");
+	shader->buildGLSL("./shader/texturerenderer/shader.vert", "./shader/texturerenderer/shader.frag");
 	
 	camera_ptr camera = camera_ptr(new Camera);
 
@@ -114,122 +119,49 @@ void TextureRenderer::buildDescriptorSetLayout()
 
 void TextureRenderer::buildPipeline()
 {
-	VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
-	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-	inputAssembly.topology = defaultTopology;
-	inputAssembly.primitiveRestartEnable = VK_FALSE;
+	//SET DEFUALT STATES
+	pipelineInfo = pipelineinfo_ptr(new PipelineInfo);
+	pipelineInfo->initialize(width, height);
 
-	VkViewport viewport = {};
-	viewport.x = 0;
-	viewport.y = 0;
-	viewport.width = (float)width;
-	viewport.height = (float)height;
-	viewport.minDepth = 0.0f;
-	viewport.maxDepth = 1.0f;
+	//SET OUTSIDE STATES(layout, renderpass vertexInput)
+	pipelineInfo->pipelineLayout = m_pipelineLayout;
+	pipelineInfo->renderPass = m_renderPass;
+	pipelineInfo->vertexInputState = m_scene->vertexInputState;
 
-	VkRect2D scissor{};
-	scissor.offset = { 0,0 };
-	scissor.extent = { width, height };
+	//SET MAIN SHADER
+	mainShader = shader_ptr(new Shader(m_device));
+	mainShader->buildGLSL("./shader/default/main.vert", "./shader/default/main.frag");
 
-	VkPipelineViewportStateCreateInfo viewportState = {};
-	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-	viewportState.viewportCount = 1;
-	viewportState.pViewports = &viewport;
-	viewportState.scissorCount = 1;
-	viewportState.pScissors = &scissor;
+	pipelineInfo->shaderStages = mainShader->shaderStage;
+	pipelineInfo->buildPipelineInfo();
 
-	VkPipelineRasterizationStateCreateInfo rasterState{};
-	rasterState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-	rasterState.depthClampEnable = VK_FALSE;
-	rasterState.rasterizerDiscardEnable = VK_FALSE;
-	rasterState.polygonMode = VK_POLYGON_MODE_FILL;
-	rasterState.lineWidth = 1.0f;
-	rasterState.cullMode = VK_CULL_MODE_BACK_BIT;
-	rasterState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; //draw for right hand maybe
-	rasterState.depthBiasEnable = VK_FALSE;
-
-	VkPipelineMultisampleStateCreateInfo multiSamplingState{};
-	multiSamplingState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-	multiSamplingState.sampleShadingEnable = VK_FALSE;
-	multiSamplingState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-
-	//depth
-	VkPipelineDepthStencilStateCreateInfo depthStencilState{};
-	depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	depthStencilState.depthTestEnable = VK_TRUE;
-	depthStencilState.depthWriteEnable = VK_TRUE;
-	depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL; //same as GL_DEPTH_LESS
-	depthStencilState.depthBoundsTestEnable = VK_FALSE;
-	depthStencilState.stencilTestEnable = VK_FALSE;	//same as GL_ENABLE_DEPTH_TEST
-
-	VkPipelineColorBlendAttachmentState colorBlendattachment{};
-	colorBlendattachment.colorWriteMask =
-		VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-		VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-	colorBlendattachment.blendEnable = VK_FALSE;
-
-	VkPipelineColorBlendStateCreateInfo colorBlendState{};
-	colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	colorBlendState.logicOpEnable = VK_FALSE;
-	colorBlendState.logicOp = VK_LOGIC_OP_COPY;
-	colorBlendState.attachmentCount = 1;
-	colorBlendState.pAttachments = &colorBlendattachment;
-	colorBlendState.blendConstants[0] = 0.0f;
-	colorBlendState.blendConstants[1] = 0.0f;
-	colorBlendState.blendConstants[2] = 0.0f;
-	colorBlendState.blendConstants[3] = 0.0f;
-
-
-	std::vector<VkDynamicState> dynamicStateEnables{
-		VK_DYNAMIC_STATE_VIEWPORT,
-		VK_DYNAMIC_STATE_SCISSOR
-	};
-
-	VkPipelineDynamicStateCreateInfo dynamicState{};
-	dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-	dynamicState.pDynamicStates = dynamicStateEnables.data();
-	dynamicState.dynamicStateCount = (uint32_t)dynamicStateEnables.size();
-
-
-	//VkGraphicsPipelineCreateInfo pipelineInfo = {};
-	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	//pipelineInfo.pVertexInputState = &vertexInputinfo;
-	pipelineInfo.pInputAssemblyState = &inputAssembly;
-	pipelineInfo.pViewportState = &viewportState;
-	pipelineInfo.pRasterizationState = &rasterState;
-	pipelineInfo.pMultisampleState = &multiSamplingState;
-	pipelineInfo.pDepthStencilState = &depthStencilState;
-	pipelineInfo.pColorBlendState = &colorBlendState;
-	pipelineInfo.pDynamicState = &dynamicState;
-	pipelineInfo.layout = m_pipelineLayout;
-	pipelineInfo.renderPass = m_renderPass;
-	pipelineInfo.subpass = 0;
-	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
-
-	/*VERTEX INPUT STATE FROM SCENE*/
-	pipelineInfo.pVertexInputState = &m_scene->vertexInputState;
-
-	/*SHADER STAGE FROM SCENE*/
-	pipelineInfo.stageCount = m_scene->shaders[0]->shaderStage.size();
-	pipelineInfo.pStages = m_scene->shaders[0]->shaderStage.data();
-
-	for(auto &mesh : m_scene->meshs )
+	for (auto &mesh : m_scene->meshs)
 	{
-		LOG_ERROR("failed to create mesh graphic pipeline") <<
-		vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo, nullptr,
-				&mesh->pipeline);
+		vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, 
+			&pipelineInfo->graphicsPipelineInfo,
+			nullptr, &mesh->pipeline);
 	}
 
-	shader_ptr shader = shader_ptr(new Shader(m_device));
-	shader->buildGLSL("./shader/texturerenderer/fix.vert", "./shader/texturerenderer/fix.frag");
+	//SET SOLID PIPELINE
+	auto solidShader = shader_ptr(new Shader(m_device));
+	solidShader->buildGLSL("./shader/default/solid.vert", "./shader/default/solid.frag");
 
-	rasterState.polygonMode = VK_POLYGON_MODE_LINE;
-	pipelineInfo.stageCount = shader->shaderStage.size();
-	pipelineInfo.pStages = shader->shaderStage.data();
+	pipelineInfo->shaderStages = solidShader->shaderStage;
+	vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo->graphicsPipelineInfo,
+		nullptr, &soildPipeline);
 
-	vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo, nullptr,
-		&m_scene->wireframePipeline);
-	
+	//SET WIRE PIPELINE
+	pipelineInfo->rasterState.polygonMode = VK_POLYGON_MODE_LINE;
+	pipelineInfo->rasterState.lineWidth = 1.0f;
+	pipelineInfo->rasterState.depthBiasEnable = VK_TRUE;
+
+	auto wireShader = shader_ptr(new Shader(m_device));
+	wireShader->buildGLSL("./shader/default/solid.vert", "./shader/default/wire.frag");
+	pipelineInfo->shaderStages = wireShader->shaderStage;
+
+	vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineInfo->graphicsPipelineInfo,
+		nullptr, &wirePipeline);
+
 
 }
 
@@ -344,10 +276,7 @@ void TextureRenderer::buildCommandBuffers()
 		vkCmdBindDescriptorSets(m_commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
 			m_pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
 
-		for (auto& mesh : m_scene->meshs)
-		{
-			mesh->render(m_commandBuffers[i], m_scene->wireframePipeline, stageindex);
-		}
+		renderOptional(m_commandBuffers[i], m_renderType);
 
 		vkCmdEndRenderPass(m_commandBuffers[i]);
 
@@ -382,25 +311,41 @@ void TextureRenderer::updateUniformBuffers()
 
 void TextureRenderer::updateShader()
 {
-	//vkDeviceWaitIdle(m_device);
-	//LOG << "working" << ENDL;
-	////vkDestroyPipeline(m_device, m_scene->meshs[0]->pipeline, nullptr);
-	////m_scene->meshs[0]->pipeline = VK_NULL_HANDLE;
-	/*VkGraphicsPipelineCreateInfo info = pipelineInfo;
-
-	shader_ptr shader = m_scene->shaders[0];
-	shader->buildGLSL("./shader/texturerenderer/fix.vert", "./shader/texturerenderer/fix.frag");
-
-	info.stageCount = shader->shaderStage.size();
-	info.pStages = shader->shaderStage.data();
-	vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &info, nullptr, 
-		&fixPipeline);*/
-	if (!stageindex)
-	{
-		stageindex = true;
-	}
-	else
-		stageindex = false;
+	//test
+	if (m_renderType == RenderType::MAIN)
+		m_renderType = RenderType::SOILDWIRE;
+	else if (m_renderType == RenderType::SOILDWIRE)
+			m_renderType = RenderType::WIRE;
+	else if (m_renderType == RenderType::WIRE)
+			m_renderType = RenderType::MAIN;
+	
 	rebuildCommandBuffers();
 	update();
+}
+
+
+void TextureRenderer::renderOptional(VkCommandBuffer cmd, RenderType type)
+{
+	for (auto& mesh : m_scene->meshs)
+	{
+		if (type == RenderType::MAIN)
+			mesh->render(cmd, NULL);
+
+		else if (type == RenderType::SOILDWIRE) {
+			mesh->render(cmd, soildPipeline);
+			//vkCmdSetDepthBias (polygon offset)
+			/*commandBuffer is the command buffer into which the command will be recorded.
+			depthBiasConstantFactor : is a scalar factor controlling the
+				constant depth value added to each fragment.
+			depthBiasClamp  : is the maximum(or minimum) depth bias of a fragment.
+			depthBiasSlopeFactor : is a scalar factor applied to a fragment¡¯s 
+				slope in depth bias calculations.*/
+			//set to slope increase clamps negative -1.0f from 0.0f - 1.0f
+			vkCmdSetDepthBias(cmd, 1.0f, 0.0f, -1.0f);
+			mesh->render(cmd, wirePipeline);
+		}
+		else if (type == RenderType::WIRE) {
+			mesh->render(cmd, wirePipeline);
+		}
+	}
 }

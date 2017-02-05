@@ -9,39 +9,66 @@
 #include <qfile.h>
 #include <qstring.h>
 #include <qtextstream.h>
-#include <renderwindow.h>
+#include <vkwindow.h>
 #include <glwindow.h>
+#include <windowframe.h>
+#include <vkrenderer.h>
+#include <scene.h>
 
 #pragma endregion
 
 MainWindow::MainWindow(QWidget* parent)
-	: QMainWindow(parent), m_glwindow(NULL), m_renderWindow(NULL)
+	: QMainWindow(parent), m_glwindow(NULL), m_vkWindow(NULL)
 {
 	setConsoleGeometry(10, 10, 780, 1000,false);
 	setStyleFromfile("./qvulkan.css");
 
-	m_center = new QWidget;
-	m_layout = new QHBoxLayout;
-	setCentralWidget(m_center);
-	m_center->setLayout(m_layout);
+	setWindowFlags(Qt::FramelessWindowHint);
 
-	//m_glwindow = new GLWindow();
-	/*m_layout->addWidget(m_glwindow);*/
-
-	m_renderWindow = new RenderWindow;
-	m_renderWindowContainer = QWidget::createWindowContainer(m_renderWindow);
-	m_layout->addWidget(m_renderWindowContainer);
-
-
-	//m_infoWidget = new InfoWidget(this);
-	//m_layout->addWidget(m_infoWidget);
+	setTopFrames();
+	setMidFrames();
+	
 }
 
 
 MainWindow::~MainWindow()
 {
 	SAFE_DELETE(m_glwindow);
-	SAFE_DELETE(m_renderWindow);
+	SAFE_DELETE(m_vkWindow);
+}
+
+void MainWindow::setTopFrames()
+{
+	m_center = new QWidget;
+	setCentralWidget(m_center);
+
+	m_topLayout = new QVBoxLayout(m_center);
+	m_center->setLayout(m_topLayout);
+	m_topLayout->setMargin(0);
+	m_topLayout->setSpacing(0);
+
+	m_frameless = new WindowFrame();
+	m_topLayout->addWidget(m_frameless);
+
+	m_mid = new QWidget();
+	m_topLayout->addWidget(m_mid);
+
+}
+
+void MainWindow::setMidFrames()
+{
+	m_midLayout = new QHBoxLayout(m_mid);
+
+	//m_glwindow = new GLWindow();
+	//m_midLayout->addWidget(m_glwindow);
+
+	m_vkWindow = new VKWindow(this);
+	m_VKWindowContainer = QWidget::createWindowContainer(m_vkWindow);
+	m_midLayout->addWidget(m_VKWindowContainer);
+
+
+	//m_infoWidget = new InfoWidget(this);
+	//m_layout->addWidget(m_infoWidget);
 }
 
 void MainWindow::setStyleFromfile(const string &filename)

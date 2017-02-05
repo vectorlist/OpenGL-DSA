@@ -9,44 +9,8 @@
 #include <shader.h>
 #include <ubo.h>
 #include <camera.h>
+#include <mesh.h>
 
-typedef struct Buffer
-{
-	VkBuffer buffer;
-	VkDeviceMemory memory;
-}Buffer;
-
-struct MeshObject
-{
-	std::vector<Vertex> vertices;
-	std::vector<uint32_t> indices;
-
-	Buffer vbo;
-	Buffer ibo;
-
-	VkPipeline pipeline;
-
-	void render(VkCommandBuffer cmd, VkPipeline inPipeline, bool stage)
-	{
-		VkDeviceSize offset[1] = { 0 };
-
-		if (!stage)
-			vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-		else
-			vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, inPipeline);
-		vkCmdBindVertexBuffers(cmd, 0, 1, &vbo.buffer, offset);
-		vkCmdBindIndexBuffer(cmd, ibo.buffer, 0, VK_INDEX_TYPE_UINT32);
-		vkCmdDrawIndexed(cmd, indices.size(), 1, 0, 0, 0);
-	}
-
-
-	uint64_t indiceBufferSize() const
-	{
-		return uint64_t(sizeof(indices[0]) * indices.size());
-	}
-};
-
-typedef std::shared_ptr<MeshObject> mesh_ptr;
 
 class VkRenderer;
 class VulkanDevice;
@@ -61,11 +25,10 @@ public:
 	VkDevice m_device;
 	bool isBuilt = false;
 
-	std::vector<mesh_ptr> meshs;
+	std::vector<vkmesh_ptr> meshs;
 	std::vector<shader_ptr> shaders;
 	UBO ubo;
 	camera_ptr camera;
-	VkPipeline wireframePipeline;
 
 	VkPipelineVertexInputStateCreateInfo vertexInputState = {};
 	std::array<VkVertexInputAttributeDescription,4> vertexInputAttrib;
@@ -80,7 +43,7 @@ public:
 
 	void releaseBuffers();
 
-	void addElement(mesh_ptr mesh);
+	void addElement(vkmesh_ptr mesh);
 	void addElement(shader_ptr shader);
 	void addElement(camera_ptr cam);
 
@@ -91,7 +54,7 @@ public:
 
 };
 
-inline void Scene::addElement(mesh_ptr mesh)
+inline void Scene::addElement(vkmesh_ptr mesh)
 {
 	meshs.push_back(mesh);
 }

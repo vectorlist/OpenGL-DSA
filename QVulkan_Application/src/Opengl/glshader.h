@@ -24,6 +24,9 @@ public:
 	std::string codeFromFile(const std::string filename);
 
 	GLuint createShader(const std::string &code, GLuint type);
+
+	void bind() { glUseProgram(program); }
+	void unbind() { glUseProgram(NULL); }
 	
 	
 	void debugCompile(GLuint shader, GLuint flag,

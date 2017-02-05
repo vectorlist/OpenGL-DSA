@@ -92,7 +92,7 @@ void Scene::buildIndiceBuffer()
 			mesh->ibo.buffer,
 			mesh->ibo.memory,
 			bufferSize);
-
+		
 		vulkanDevice->copyBuffer(stagingBuffer, mesh->ibo.buffer, bufferSize);
 
 
@@ -106,7 +106,7 @@ void Scene::initUniformBuffer()
 {
 	LOG_SECTION("initialize uniform buffer");
 	//keep staging buffer alive
-	VkDeviceSize bufferSize = sizeof(UBODataType);
+	VkDeviceSize bufferSize = sizeof(ubo);
 
 	//staging allocate memory buffer
 	vulkanDevice->createBuffer(
@@ -155,7 +155,7 @@ void Scene::updateUnifomrBuffers()
 	ubo.data.view = camera->view.transposed();
 
 	//working far now
-	ubo.data.lightPos = vec3f(-5, 5, 5);
+	ubo.data.lightPos = vec3f(-5*sin(m_renderer->frame * 0.2), 5, 5);
 
 
 	void* data;
@@ -179,6 +179,4 @@ void Scene::releaseBuffers()
 	/*UBO*/
 	destroyBuffer(ubo.stagingBuffer, ubo.stagingMemory);
 	destroyBuffer(ubo.buffer, ubo.memory);
-
-	vkDestroyPipeline(m_device,wireframePipeline,nullptr);
 }

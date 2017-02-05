@@ -119,12 +119,7 @@ public:
 
 	}
 
-	//TEST
-
-	vec2i mousePos;
-	vec3f rot;
-	float distance = -5;
-	float speed = 0.2f;
+	uint32_t frame =0;
 	
 protected:
 };

@@ -4,8 +4,6 @@
 #include <tiny_obj_loader.h>
 #include <scene.h>
 
-
-
 void meshTool::LoadModel(
 	const std::string &filename,
 	std::vector<Vertex> *vertices,
@@ -54,7 +52,7 @@ void meshTool::LoadModel(
 
 void meshTool::LoadModel(
 	const std::string &filename,
-	MeshObject* mesh)
+	Mesh* mesh)
 {
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;

@@ -1,42 +1,42 @@
-#include <renderwindow.h>
+#include <VKWindow.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <vkrenderer.h>
 #include <vktools.h>
-#include <basicrenderer.h>
 #include <qdebug.h>
 #include <QMouseEvent>
 #include <camera.h>
 #include <scene.h>
 #include <texturerenderer.h>
 
-RenderWindow::RenderWindow()
+VKWindow::VKWindow(MainWindow* parent) : m_mainWindow(parent)
 {
-	/*m_renderer = new VkRenderer(this);
-	m_renderer->initialize();*/
-	//m_renderer = new BasicRenderer(this);
-	//m_renderer->initialize();
 	m_renderer = new TextureRenderer(this);
+	connect(&m_timer, &QTimer::timeout, this, &VKWindow::frameUpdate);
 }
 
-RenderWindow::~RenderWindow()
+VKWindow::~VKWindow()
 {
 	SAFE_DELETE(m_renderer);
 }
 
-void RenderWindow::resizeEvent(QResizeEvent* e)
+void VKWindow::resizeEvent(QResizeEvent* e)
 {
 	QWindow::resizeEvent(e);
 	if (!m_renderer->isBuilt)
+	{
 		m_renderer->buildProcedural();
+		m_timer.start(100);
+	}
 	else
+	{
 		m_renderer->resize();
-	
+	}
 	m_renderer->updateUniformBuffers();
 	m_renderer->render();
 }
 
-void RenderWindow::mousePressEvent(QMouseEvent *e)
+void VKWindow::mousePressEvent(QMouseEvent *e)
 {
 	if (e->buttons() == Qt::LeftButton)
 	{
@@ -50,7 +50,7 @@ void RenderWindow::mousePressEvent(QMouseEvent *e)
 	QWindow::mousePressEvent(e);
 }
 
-void RenderWindow::mouseMoveEvent(QMouseEvent*e)
+void VKWindow::mouseMoveEvent(QMouseEvent*e)
 {
 	if (e->buttons() == Qt::LeftButton)
 	{
@@ -68,11 +68,18 @@ void RenderWindow::mouseMoveEvent(QMouseEvent*e)
 	QWindow::mouseMoveEvent(e);
 }
 
-void RenderWindow::wheelEvent(QWheelEvent *e)
+void VKWindow::wheelEvent(QWheelEvent *e)
 {
 	if (!m_renderer->isBuilt) return;
 	m_renderer->m_scene->camera->zoom(e->delta());
 	m_renderer->update();
 
 	QWindow::wheelEvent(e);
+}
+
+void VKWindow::frameUpdate()
+{
+	m_renderer->update();
+	m_renderer->frame++;
+	//qDebug() << 1;
 }

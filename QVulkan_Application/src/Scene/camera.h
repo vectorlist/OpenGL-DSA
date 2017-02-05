@@ -23,9 +23,9 @@ public:
 	Matrix4x4 view;
 
 	vec3f m_rotation;
-	float m_zoom = -7;
+	float m_zoom = -5;
 
-	float m_zoomSpeed = 0.0046f;
+	float m_zoomSpeed = 0.0036f;
 
 	float m_aspect;
 	float m_fovy;

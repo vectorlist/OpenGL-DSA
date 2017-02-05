@@ -45,7 +45,8 @@ void Texture::loadTexture(const std::string &filename, VkFormat format, bool for
 
 	VkBool32 useStaging = true;
 	if (forceLinearTiling)
-		useStaging = !(formatProperties.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
+		useStaging = !(formatProperties.linearTilingFeatures & 
+			VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
 
 	VkMemoryAllocateInfo allocateInfo{};
 	allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;

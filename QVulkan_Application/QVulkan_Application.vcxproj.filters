@@ -20,19 +20,10 @@
     <ClCompile Include="src\Opengl\glwindow.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Qt\MainWindow.cpp">
-      <Filter>Qt</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Qt\renderwindow.cpp">
-      <Filter>Qt</Filter>
-    </ClCompile>
     <ClCompile Include="src\Renderer\vkrenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\vkrenderer_sub.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Renderer\basicrenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\texturerenderer.cpp">
@@ -71,6 +62,42 @@
     <ClCompile Include="src\Vk\vkswapchain.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_framebutton.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_framebutton.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Qt\framebutton.cpp">
+      <Filter>Qt\frameless</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_windowframe.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_windowframe.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Qt\windowframe.cpp">
+      <Filter>Qt\frameless</Filter>
+    </ClCompile>
+    <ClCompile Include="src\glmesh.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Qt\vkwindow.cpp">
+      <Filter>Qt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Qt\mainwindow.cpp">
+      <Filter>Qt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pipelineinfo.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_vkwindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_vkwindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h">
@@ -94,16 +121,7 @@
     <ClInclude Include="src\Opengl\glshader.h">
       <Filter>OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Qt\renderwindow.h">
-      <Filter>Qt</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Qt\MainWindow.h">
-      <Filter>Qt</Filter>
-    </ClInclude>
     <ClInclude Include="src\Renderer\vkrenderer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Renderer\basicrenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\texturerenderer.h">
@@ -151,6 +169,15 @@
     <ClInclude Include="src\Vk\vkswapchain.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\glmesh.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Qt\mainwindow.h">
+      <Filter>Qt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pipelineinfo.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="OpenGL">
@@ -181,5 +208,34 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{d003655f-6bd6-47bb-9cb1-991eacaa3ccc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{7109e993-cb72-4434-a75d-0f6d58d21f57}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{c9217800-11b4-4c77-95d9-7b51dabb5646}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Qt\frameless">
+      <UniqueIdentifier>{73d71494-f10c-4d26-99f2-92da21856e36}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="src\Qt\framebutton.h">
+      <Filter>Qt\frameless</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\Qt\windowframe.h">
+      <Filter>Qt\frameless</Filter>
+    </CustomBuild>
+    <CustomBuild Include="src\Qt\vkwindow.h">
+      <Filter>Qt</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

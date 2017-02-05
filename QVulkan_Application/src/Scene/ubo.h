@@ -3,16 +3,18 @@
 #include <vulkan/vulkan.h>
 #include <matrix4x4.h>
 #include <vec3f.h>
+#include <glad/glad.h>
 
+//UBO DATA is shared btw gl and vulkan
 typedef struct UBOData
 {
-	Matrix4x4 model;
-	Matrix4x4 view;
 	Matrix4x4 proj;
+	Matrix4x4 view;
+	Matrix4x4 model;
 	vec3f lightPos;
 }UBODataType;
 
-typedef struct UniformBufferObject_T
+typedef struct UBO
 {
 	UBOData data;
 
@@ -22,28 +24,35 @@ typedef struct UniformBufferObject_T
 	VkBuffer buffer;
 	VkDeviceMemory memory;
 
-}UBO;
+}UBO_T;
 
-//test
 
-typedef struct testData
+typedef struct GLUBO
 {
-	vec3f pos;
-}testData;
+	GLUBO();
+	~GLUBO();
+	UBOData data;
+	GLuint buffer = NULL;
 
-template <typename T>
-struct UniformSet
+	void buildBuffers();
+
+}GLUBO_T;
+
+inline GLUBO::GLUBO()
 {
-	T data;
+	//buildBuffers();
+}
 
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingMemory;
+inline GLUBO::~GLUBO()
+{
+	if (buffer != NULL)
+		glDeleteBuffers(1, &buffer);
+}
 
-	VkBuffer buffer;
-	VkDeviceMemory memory;
-
-	uint64_t typeSize()
-	{
-		return sizeof(T);
-	}
-};
+inline void GLUBO::buildBuffers()
+{
+	glGenBuffers(1, &buffer);
+	glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(data), &data, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, NULL);
+}
