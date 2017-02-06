@@ -23,20 +23,25 @@ Texture::~Texture()
 
 
 //#include <qopengltexture.h>
+#include <mipmap.h>
 
 void Texture::loadTexture(const std::string &filename, VkFormat format, bool forceLinearTiling)
 {
 	QImage file(filename.c_str());
 	QImage img = file.convertToFormat(QImage::Format_RGBA8888);
+	//QImage img = file.convertToFormat(QImage::Format_RGB888);
 	
-	auto* pixels = img.bits();
+	/*auto* pixels = img.bits();*/
+	LOG_SECTION("create mipmaps ..");
+	Mipmap mip(file.width(), file.height(), file.constBits(),3);
+	LOG << "max MipMaps : " << mip.pyramids.size() << ENDL;
+	auto* buffer = mip.mapBuffer(0);
+	auto* pixels = buffer->data();
 
-	VkDeviceSize imageSize = img.width() * img.height() * 4;
-	if (pixels == nullptr)
-		LOG_WARN("failed to load image");
-
-	width = img.width();
-	height = img.height();
+	VkDeviceSize imageSize = buffer->width * buffer->height * 4;
+	
+	width = buffer->width;
+	height = buffer->height;
 	mipLevels = 1;
 
 	VkFormatProperties formatProperties;
@@ -61,7 +66,7 @@ void Texture::loadTexture(const std::string &filename, VkFormat format, bool for
 		VkBuffer stagingBuffer;
 		VkDeviceMemory stagingMemory;
 
-		uint32_t zulsize = sizeof(pixels);
+		//uint32_t zulsize = sizeof(pixels);
 
 		VkBufferCreateInfo bufferCreateInfo{};
 		bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -83,6 +88,7 @@ void Texture::loadTexture(const std::string &filename, VkFormat format, bool for
 		//get available host memory address and  reservation memory size type of flag
 		LOG_ERROR("failed to get host memory address") <<
 		vkMapMemory(m_device, stagingMemory, 0, memReqs.size, 0, (void**)&data);
+		//memcpy(data, pixels, (size_t)imageSize);
 		memcpy(data, pixels, (size_t)imageSize);
 		vkUnmapMemory(m_device, stagingMemory);
 

@@ -104,6 +104,7 @@
     </ClCompile>
     <ClCompile Include="src\glmesh.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mipmap.cpp" />
     <ClCompile Include="src\Opengl\glad.c" />
     <ClCompile Include="src\Opengl\glshader.cpp" />
     <ClCompile Include="src\Opengl\glwindow.cpp" />
@@ -129,11 +130,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h" />
+    <ClInclude Include="..\include\core\mathutil.h" />
     <ClInclude Include="..\include\core\matrix4x4.h" />
+    <ClInclude Include="..\include\core\rgb.h" />
     <ClInclude Include="..\include\core\vec2f.h" />
     <ClInclude Include="..\include\core\vec3f.h" />
     <ClInclude Include="..\include\core\vml.h" />
     <ClInclude Include="src\glmesh.h" />
+    <ClInclude Include="src\mipmap.h" />
     <ClInclude Include="src\Opengl\glshader.h" />
     <ClInclude Include="src\Opengl\glwindow.h" />
     <ClInclude Include="src\pipelineinfo.h" />

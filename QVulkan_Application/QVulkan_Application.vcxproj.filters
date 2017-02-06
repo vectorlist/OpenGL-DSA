@@ -98,6 +98,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_vkwindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="src\mipmap.cpp">
+      <Filter>Scene\Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core\color.h">
@@ -178,6 +181,15 @@
     <ClInclude Include="src\pipelineinfo.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\mipmap.h">
+      <Filter>Scene\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core\rgb.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core\mathutil.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="OpenGL">
@@ -225,6 +237,9 @@
     </Filter>
     <Filter Include="Qt\frameless">
       <UniqueIdentifier>{73d71494-f10c-4d26-99f2-92da21856e36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Map">
+      <UniqueIdentifier>{b1b8fdd5-57b4-4a14-975e-934e2dee5a24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

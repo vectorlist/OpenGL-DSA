@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <memory>
+#include <iostream>
+#include <qdebug.h>
 
 class Color
 {
@@ -55,6 +57,9 @@ public:
 
 	static Color clamp(const Color &c, float min = 0.0, float max = 1.0);
 	static Color gamma(const Color &c, float gamma = 2.2f);
+
+	friend std::ostream& operator<<(std::ostream &o, const Color& color);
+	friend QDebug& operator<<(QDebug &d, const Color& color);
 	
 };
 
@@ -185,6 +190,19 @@ inline float Color::luminance() const
 	return 0.212671f * r + 0.715160f * g + 0.072169f * b;
 }
 
-typedef std::unique_ptr<Color[]> ColorPtr;
+inline std::ostream& operator<<(std::ostream &o, const Color& color)
+{
+	o << "Color(" << color.r << ", " << color.g << ", " << color.b << ')';
+	return o;
+}
+
+inline QDebug& operator<<(QDebug &d, const Color& color)
+{
+	d << "Color(" << color.r << ", " << color.g << ", " << color.b << ')';
+	return d.nospace();
+}
+
+typedef std::unique_ptr<Color[]> color_ptr;
+//typedef std::shared_ptr<Color[]> color_ptr;
 
 #endif//COLOR_H

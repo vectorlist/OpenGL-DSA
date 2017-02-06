@@ -41,8 +41,6 @@ public:
 	
 	void render();
 	void updateUniformBuffers();
-	/*void updateShader();*/
-	int count = 0;
 
 	void updateShader();
 	//test

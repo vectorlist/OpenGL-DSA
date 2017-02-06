@@ -54,7 +54,7 @@ void TextureRenderer::buildScene()
 	m_scene = new Scene(this);
 
 	vkmesh_ptr mesh = vkmesh_ptr(new VKMesh);
-	meshTool::LoadModel("./model/stone.obj", mesh.get());
+	meshTool::LoadModel("./model/stone_f.obj", mesh.get());
 
 	shader_ptr shader = shader_ptr(new Shader(m_device));
 	//SPV
@@ -244,7 +244,6 @@ void TextureRenderer::buildDescriptorSet()
 
 void TextureRenderer::buildCommandBuffers()
 {
-	count++;
 	VkCommandBufferBeginInfo cmdBufInfo = vkInitializer::commandBufferBeginInfo();
 
 	VkClearValue clearValues[2];
@@ -288,8 +287,9 @@ void TextureRenderer::buildCommandBuffers()
 void TextureRenderer::buildTexture()
 {
 	m_texture = new Texture(m_vulkanDevice);
-	//m_texture->loadTexture("./image/checker.jpg", VK_FORMAT_BC2_UNORM_BLOCK, false);
-	m_texture->loadTexture("./image/sphinx01.jpg", VK_FORMAT_R8G8B8A8_UNORM, false);
+	m_texture->loadTexture("./image/checker.jpg", VK_FORMAT_R8G8B8A8_UNORM, false);
+	//m_texture->loadTexture("./image/checker.jpg", VK_FORMAT_R8G8B8_UNORM, false);
+	//m_texture->loadTexture("./image/rock2.jpg", VK_FORMAT_R8G8B8A8_UNORM, false);
 }
 
 void TextureRenderer::render()

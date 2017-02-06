@@ -105,7 +105,6 @@ void Scene::buildIndiceBuffer()
 void Scene::initUniformBuffer()
 {
 	LOG_SECTION("initialize uniform buffer");
-	//keep staging buffer alive
 	VkDeviceSize bufferSize = sizeof(ubo);
 
 	//staging allocate memory buffer
