@@ -99,8 +99,8 @@ int main(int args, char* argv[])
     };
 
     const Vertex vertices[] = {
-        {{-0.25,-0.25,0}, {1,0,0}},
-        {{0,0.2f,0}, {1,0,1}},
+        {{-0.75,-0.75,0}, {1,0,0}},
+        {{-.5,0.2f,0}, {1,0,1}},
         {{0, -0.5,0}, {0,1,1}},
     };
 
@@ -157,16 +157,15 @@ int main(int args, char* argv[])
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        //glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(Vertex));
+        glVertexArrayVertexBuffer(vao, 0, vbo1, 0, sizeof(Vertex));
 
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         SwapBuffers(dc);
     }
     
-    wglMakeCurrent(NULL, NULL);
-    wglDeleteContext(context);
-    ReleaseDC(hwnd, dc);
+    GL::ValidateGLExtension(hwnd);
+    
     DestroyWindow(hwnd);
     UnregisterClass(wc.lpszClassName, wc.hInstance);
 
