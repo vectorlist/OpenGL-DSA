@@ -58,6 +58,9 @@ int main(int args, char* argv[])
     auto context =  GL::CreateGLContext(hwnd);
     auto dc = GetDC(hwnd);
 
+    glEnable(GL_MULTISAMPLE);
+    
+
     uint32_t vertShader;
     uint32_t pixelShader;
     uint32_t pipeline;
@@ -110,8 +113,6 @@ int main(int args, char* argv[])
         {{0.5,-0.5,0}, {0,0,1}},
     };
 
-
-
     uint32_t vbo,vbo1,vao;
     glCreateBuffers(1, &vbo);
     glCreateBuffers(1, &vbo1);
@@ -139,6 +140,12 @@ int main(int args, char* argv[])
 
     glViewport(0,0,w, h);
 
+    GLuint qo{};
+    glGenQueries(1, &qo);
+
+    
+
+
     MSG msg{};
     while (msg.message != WM_QUIT)
     {
@@ -148,6 +155,8 @@ int main(int args, char* argv[])
             DispatchMessage(&msg);
         }
         
+        glBeginQuery(GL_PRIMITIVES_GENERATED, qo);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2f,0.2f,0.2f,1.f);
         //glGetIntegerv();
@@ -160,6 +169,13 @@ int main(int args, char* argv[])
         glVertexArrayVertexBuffer(vao, 0, vbo1, 0, sizeof(Vertex));
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        glEndQuery(GL_PRIMITIVES_GENERATED);
+
+        GLint res{};
+        glGetQueryObjectiv(qo, GL_QUERY_RESULT, &res);
+
+        std::cout << "hold : " << res << std::endl;
 
         SwapBuffers(dc);
     }
