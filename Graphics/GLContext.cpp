@@ -38,5 +38,46 @@ void CompileFromCode(LPCSTR code, khronos_uint32_t type, _Out_ GLuint* shader){
 
 void GLContext::CreateVertexShader(const LPCSTR file, GLuint *shader)
 {
-       
+
+}
+
+void GLContext::PASetVertexBuffer(uint slot, uint buffer, uint offset, uint stride)
+{
+    mVertexBuffer = buffer;
+
+    if(mVertexArray){
+        glVertexArrayVertexBuffer(mVertexArray, slot, mVertexBuffer, offset, stride);
+    }
+}
+
+void GLContext::PASetInputLayout(uint layout)
+{
+    mVertexArray = layout;
+    //glVertexArrayVertexBuffer(mVertexArray, 0, mVertexBuffer, )
+}
+
+void GLContext::ReflectShader(uint shader)
+{
+    static const GLenum props[] = {GL_TYPE, GL_LOCATION };
+    const int nProps = ARRAYSIZE(props);
+    GLchar queryName[34] = {};
+    GLint attribs[nProps] = {};
+
+    int nInput{};
+
+    glGetProgramInterfaceiv(shader, GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES, &nInput);
+
+    if(!nInput) return;
+
+    for(int i = 0; i < nInput; ++i){
+        glGetProgramResourceiv(shader, GL_PROGRAM_INPUT, i, nProps, props,
+        nProps, nullptr, attribs);
+        
+    }
+
+
+
+
+    //GL_FLOAT_VEC3
+    //glGetProgramResourceName(shader, GL_PROGRAM_OUTPUT)
 }

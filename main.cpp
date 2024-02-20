@@ -91,6 +91,53 @@ int main(int args, char* argv[])
 
     glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT,vertShader);
     glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT,pixelShader);
+
+    int input{};
+    glGetProgramInterfaceiv(vertShader, GL_PROGRAM_INPUT,
+      GL_ACTIVE_RESOURCES , &input);
+
+    char name_t[128];
+    for(int i =0; i < input; ++i){
+        int len{};
+        glGetProgramResourceName(vertShader, GL_PROGRAM_INPUT, i, ARRAYSIZE(name_t), &len, name_t);
+        
+        int locationIndex = glGetProgramResourceLocation(vertShader, GL_PROGRAM_INPUT, name_t);
+        struct 
+        {
+            GLsizei len;
+            GLint size;
+            GLenum type;
+            GLchar name[62];
+        }attrib;
+        
+        glGetActiveAttrib(vertShader, locationIndex, sizeof(char) * len,
+         &attrib.len, &attrib.size, &attrib.type, attrib.name);
+
+        //glGetProgramResourceLocation(vertShader, )
+        std::cout << name_t << " : " << locationIndex << " : " << len << std::endl;
+    }
+
+
+
+
+    int output = 0;
+    glGetProgramInterfaceiv(vertShader, GL_PROGRAM_OUTPUT, GL_ACTIVE_RESOURCES, &output);
+
+    const GLenum prop[] = {GL_TYPE, GL_LOCATION};
+
+    GLchar name[256] = {};
+    int param[2] = {};
+
+    for(int i = 0; i < output; ++i){
+        glGetProgramResourceName(vertShader, GL_PROGRAM_OUTPUT, i, sizeof(name), nullptr, name);
+        glGetProgramResourceiv(vertShader, GL_PROGRAM_OUTPUT, i, ARRAYSIZE(prop),
+         prop, 2, nullptr, param);
+
+        char buffer[256];
+        sprintf(buffer, "index : %i name : %s type : %i location : %i", i, name, param[0], param[1]);
+        std::cout << buffer << std::endl;
+    }
+
     
 
     struct vec3{

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLExtension.h"
+#include "GLConfig.h"
 
 class GLContext{
     public:
@@ -11,11 +11,20 @@ class GLContext{
 
     void CreateVertexShader(const LPCSTR file, GLuint* shader);
 
+    //Pipeline Assbley
+    void PASetVertexBuffer(uint slot, uint buffer, uint offset, uint stride);
+    void PASetInputLayout(uint layout);
 
+    void ReflectShader(uint shader);
 
     HGLRC mRC;
     HDC mDC;
     HWND mHwnd;
-    UINT mPipeline;
+
+    struct PipelineAssambly;
+
+    uint mPipeline = 0;
+    uint mVertexArray = 0;
+    uint mVertexBuffer = 0;     //cureent vbo
 };
 
